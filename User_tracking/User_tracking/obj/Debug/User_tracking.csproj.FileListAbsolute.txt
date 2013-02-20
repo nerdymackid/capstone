@@ -10,6 +10,5 @@ C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\U
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.pdb
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\bin\Debug\User_tracking.exe
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\bin\Debug\User_tracking.pdb
-C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.csprojResolveAssemblyReference.cache
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.Properties.Resources.resources
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.csproj.GenerateResource.Cache

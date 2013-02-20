@@ -20,6 +20,7 @@ namespace User_tracking
         {
             Kinect k = new Kinect();
             k.StartKinectST();
+            //Console.WriteLine(k.findUserTheta(5, 6, 7));
             while (true)
             {
 
@@ -94,6 +95,9 @@ namespace User_tracking
                         Console.WriteLine("id: " + skel.TrackingId + "shoulder L      X:" + skel.Joints[JointType.ShoulderLeft].Position.X + " Y: " + skel.Joints[JointType.ShoulderLeft].Position.Y + " Z: " + skel.Joints[JointType.ShoulderLeft].Position.Z);
                         Console.WriteLine("id: " + skel.TrackingId + "shoulder C      X:" + skel.Joints[JointType.ShoulderCenter].Position.X + " Y: " + skel.Joints[JointType.ShoulderCenter].Position.Y + " Z: " + skel.Joints[JointType.ShoulderCenter].Position.Z);
                         Console.WriteLine("id: " + skel.TrackingId + "shoulder R      X:" + skel.Joints[JointType.ShoulderRight].Position.X + " Y: " + skel.Joints[JointType.ShoulderRight].Position.Y + " Z: " + skel.Joints[JointType.ShoulderRight].Position.Z);
+                        double theta = findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
+                        theta = radians2Degrees(theta);
+                        Console.WriteLine("theta: " + theta.ToString());
                         //Console.WriteLine("id: " + skel.TrackingId + " X: " + skel.Position.X + " Y: " + skel.Position.Y + " Z: " + skel.Position.Z);
                         count = 0;
                     }
@@ -102,48 +106,54 @@ namespace User_tracking
             }
         }
 
-        /*
-        private void DrawTrackedSkeletonJoints(JointCollection jointCollection)
+        ////* Theta Calculation - Scarlett *//
+
+        // Returns theta given the two location points for a user's right and left shoulder
+        static public double findUserTheta(double c, double d, double e, double f)
         {
-            // Render Head and Shoulders
-            DrawBone(jointCollection[JointType.Head], jointCollection[JointType.ShoulderCenter]);
-            DrawBone(jointCollection[JointType.ShoulderCenter], jointCollection[JointType.ShoulderLeft]);
-            DrawBone(jointCollection[JointType.ShoulderCenter], jointCollection[JointType.ShoulderRight]);
-
-            // Render Left Arm
-            //DrawBone(jointCollection[JointType.ShoulderLeft], jointCollection[JointType.ElbowLeft]);
-           // DrawBone(jointCollection[JointType.ElbowLeft], jointCollection[JointType.WristLeft]);
-            //DrawBone(jointCollection[JointType.WristLeft], jointCollection[JointType.HandLeft]);
-
-            // Render Right Arm
-            //DrawBone(jointCollection[JointType.ShoulderRight], jointCollection[JointType.ElbowRight]);
-           // DrawBone(jointCollection[JointType.ElbowRight], jointCollection[JointType.WristRight]);
-            //DrawBone(jointCollection[JointType.WristRight], jointCollection[JointType.HandRight]);
-
-            // Render other bones...
+            double A, B, C, preAcos, theta;
+            B = System.Math.Sqrt(((c * c) + (d * d)));
+            C = System.Math.Sqrt(((e * e) + (f * f)));
+            A = System.Math.Sqrt(((c - e) * (c - e) + (d - f) * (d - f)));
+            preAcos = ((A * A) + (B * B) - (C * C)) / (2 * A * B);
+            if (preAcos <= 1.0 && preAcos >= -1.0)
+            {
+                theta = System.Math.Acos(preAcos);
+            }
+            else
+            {
+                Console.WriteLine("Invalid TRIANGLE, CANNOT COMPUTE THETA");
+                return -1;
+            }
+            return theta;
         }
-        private void DrawBone(Joint jointFrom, Joint jointTo)
+        static public double radians2Degrees(double radians)
         {
-            if (jointFrom.TrackingState == JointTrackingState.NotTracked ||
-            jointTo.TrackingState == JointTrackingState.NotTracked)
-            {
-                return; // nothing to draw, one of the joints is not tracked
-            }
+            double degrees = (radians * 180.0) / System.Math.PI;
+            return degrees;
+        }
+        /* End Theta Calculation - Scarlett */
 
-            if (jointFrom.TrackingState == JointTrackingState.Inferred ||
-            jointTo.TrackingState == JointTrackingState.Inferred)
-            {
-                DrawNonTrackedBoneLine(jointFrom.Position, jointTo.Position);  // Draw thin lines if either one of the joints is inferred
-            }
+    }
+    class calibrate
+    {
+        private kinectData[] kinects;
+        struct kinectData
+        {
+            public int id;
+            public double theta;
 
-            if (jointFrom.TrackingState == JointTrackingState.Tracked &&
-            jointTo.TrackingState == JointTrackingState.Tracked)
-            {
-                DrawTrackedBoneLine(jointFrom.Position, jointTo.Position);  // Draw bold lines if the joints are both tracked
-            }
+            public double distance;
+            public double Height;
+
+
         }
 
-        */
+        public void calibate()
+        {
+            //kinects = new k
+
+        }
 
     }
 }

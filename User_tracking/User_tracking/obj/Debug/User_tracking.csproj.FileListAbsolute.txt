@@ -13,3 +13,6 @@ C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\bin\Debug\U
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.csprojResolveAssemblyReference.cache
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.Properties.Resources.resources
 C:\Users\Jerry\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.csproj.GenerateResource.Cache
+C:\Users\Sea Pong\Documents\GitHub\capstone\User_tracking\User_tracking\bin\Debug\User_tracking.exe.config
+C:\Users\Sea Pong\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.exe
+C:\Users\Sea Pong\Documents\GitHub\capstone\User_tracking\User_tracking\obj\Debug\User_tracking.pdb

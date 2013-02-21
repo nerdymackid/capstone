@@ -64,13 +64,13 @@ namespace MultiKinectProcessor
         /// </summary>
         static public void addtoDebugTextBox(String input)
         {
-            debugWindow.debugTextBox.AppendText("\n" + input) ;
+            debugWindow.debugTextBox.AppendText(input + "\r") ;
 
         }
         static public void addtoDebugTextBox(String input, SolidColorBrush color)
         {
 
-            debugWindow.debugTextBox.AppendText("\r" + input);
+            debugWindow.debugTextBox.AppendText(input + "\r");
 
             debugWindow.debugTextBox.Selection.Select(debugWindow.debugTextBox.Document.ContentEnd.GetLineStartPosition(0), debugWindow.debugTextBox.Document.ContentEnd);
             // TBC debugWindow.debugTextBox.Selection.
@@ -128,6 +128,11 @@ namespace MultiKinectProcessor
         /// Brush used to draw skeleton center point
         /// </summary>
         private readonly Brush centerPointBrush = Brushes.Blue;
+
+        /// <summary>
+        /// Brush used to Kinect point
+        /// </summary>
+        private readonly Brush kinectPointBrush = Brushes.Orange;
 
         /// <summary>
         /// Brush used for drawing joints that are currently tracked
@@ -367,7 +372,7 @@ namespace MultiKinectProcessor
                 {
                     foreach (Skeleton skel in skeletons)
                     {
-                        RenderClippedEdges(skel, dc);
+                        //RenderClippedEdges(skel, dc);
 
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
@@ -396,69 +401,75 @@ namespace MultiKinectProcessor
                 // Draw a transparent background to set the render size
                 dctv.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
 
+
+        
+
                 if (skeletons.Length != 0)
                 {
-                    int trackedSkeletons = 0;
-
+                    int tracked = 0;
                     foreach (Skeleton skel in skeletons)
                     {
-                        // RenderClippedEdges(skel, dctv);
-
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
-                            trackedSkeletons++;
-
-                            this.DrawBonesAndJoints(skel, dctv);
+                            tracked++;
                         }
-                        else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
+                        if (tracked > 1)
                         {
-                            dctv.DrawEllipse(
-                            this.centerPointBrush,
-                            null,
-                            this.SkeletonPointToScreen(skel.Position),
-                            BodyCenterThickness,
-                            BodyCenterThickness);
+
+                            // SP - Write error that only one skeleton can exist right now
+                            this.statusBarText.Foreground = errorMessage;
+                            this.statusBarText.Text = "During calibration, only 1 person may be in scene as the controller. " + skeletons.Length + " skeletons detected";
+                            break;
                         }
                     }
 
-                    if (trackedSkeletons > 1)
+                    if (tracked == 1)
                     {
-                        // SP - Write error that only one skeleton can exist right now
-                        this.statusBarText.Foreground = errorMessage;
-                        this.statusBarText.Text = "During calibration, only 1 person may be in scene as the controller. " + skeletons.Length + " skeletons detected";
-                    }
-                    else if (trackedSkeletons == 1)
-                    {
+
+
                         clockCounter++;
 
-                        if (this.statusBarText.Text.Contains("Calibration in Progress") && !this.statusBarText.Text.Contains("..."))
-                        {
-                            if (clockCounter % 15 == 0)
-                            {
-                                this.statusBarText.Text += ".";
-                                
-                            }
-                       
-                        }
-                        else
-                        {
-                            // SP - Write Currently calibrating message
-                            this.statusBarText.Foreground = infoMessage;
-                            this.statusBarText.Text = "Calibration in Progress";
-                        }
+                        // SP - Write Currently calibrating message
+                        this.statusBarText.Foreground = infoMessage;
+                        this.statusBarText.Text = "Calibration in Progress";
 
+
+                        dctv.DrawEllipse(
+                        this.centerPointBrush,
+                        null,
+                        new Point(RenderWidth / 2.0, RenderHeight / 2.0),
+                        30,
+                        30);
+
+     
+
+                        Point kinectLocation = new Point();
+                        kinectLocation = KinectPointToScreen(KinectAll.kinectAll.kinectsList.First().distance, KinectAll.kinectAll.kinectsList.First().theta);
+
+
+                        dctv.DrawEllipse(this.kinectPointBrush, null, kinectLocation, 20, 20);
+
+
+
+                        dctv.DrawLine(inferredBonePen, new Point(RenderWidth / 2.0, RenderHeight / 2.0), kinectLocation);
                     }
 
-                    else if (trackedSkeletons < 1)
+                    else
                     {
                         // SP - WriteStep into frame message
                         this.statusBarText.Foreground = infoMessage;
                         this.statusBarText.Text = "Please step into the Kinect Frame";
                     }
+
+
+
                 }
 
+               
+
                 // prevent drawing outside of our render area
-                this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+                this.drawingGroupTopView.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
             }
         }
 
@@ -573,6 +584,46 @@ namespace MultiKinectProcessor
             // We are not using depth directly, but we do want the points in our 640x480 output resolution.
             DepthImagePoint depthPoint = KinectAll.kinectAll.getFirstKinect().CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
+        }
+
+
+        /// <summary>
+        /// Maps a KinectPoint to lie within our render space and converts to Point
+        /// </summary>
+        /// <param name="skelpoint">point to map</param>
+        /// <returns>mapped point</returns>
+        private float maxScale = 0;
+        private Point KinectPointToScreen(double distanceraw, double theta)
+        {
+            double distance = 0;
+            distance = distanceraw * 20;
+
+            float Xoffset, Yoffset;
+            Xoffset = (float) (distance * System.Math.Cos(Calculation.degrees2Radians(theta)));
+            Yoffset = (float) (distance * System.Math.Sin(Calculation.degrees2Radians(theta)));
+
+    
+
+            // Update Max Values
+            if (System.Math.Abs(Xoffset) > maxScale)
+            {
+                maxScale = System.Math.Abs(Xoffset);
+            }
+            if (System.Math.Abs(Yoffset) > maxScale)
+            {
+                maxScale = System.Math.Abs(Yoffset);
+            }
+
+
+
+            double Xtarget, Ytarget;
+            Xtarget = (Xoffset * ((RenderWidth / 2.0) / maxScale)) + (RenderWidth / 2.0);
+            Ytarget = (Yoffset * ((RenderHeight / 2.0) / maxScale)) - (RenderHeight / 2.0);
+
+
+
+
+            return new Point(Xtarget, Ytarget);
         }
 
         /// <summary>

@@ -8,6 +8,11 @@ namespace MultiKinectProcessor.SourceCode
 {
     class Calculation
     {
+
+        static public double findDistance(double c, double d)
+        {
+            return System.Math.Sqrt(((c * c) + (d * d)));
+        }
         /// <summary>
         /// Description: Returns theta (in Radians) given the two location points for a user's center and right shoulder
         /// Original Author: Alex Scarlett
@@ -30,6 +35,17 @@ namespace MultiKinectProcessor.SourceCode
                 return -1;
             }
             return theta;
+        }
+
+        
+
+        /// <summary>
+        /// Description: Converts Degrees to Radians
+        /// Original Author: Sea Pong
+        /// </summary>
+        static public double degrees2Radians(double degrees)
+        {
+            return (degrees * System.Math.PI) / 180.0;
         }
 
         /// <summary>

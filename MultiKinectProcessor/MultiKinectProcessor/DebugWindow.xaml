@@ -65,7 +65,7 @@
         <Viewbox Grid.Row="1" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Image Name="Video" Width="360" Height="270"/>
         </Viewbox>
-        <Viewbox Grid.Row="2" Stretch="None" HorizontalAlignment="Left" Margin="0 5 0 0" VerticalAlignment="Top">
+        <Viewbox Grid.Row="2" Stretch="None"  HorizontalAlignment="Left" Margin="0 5 0 0" VerticalAlignment="Top">
             <Image Name="TopView" Width="360" Height="270"/>
         </Viewbox>
 
@@ -75,9 +75,7 @@
                  HorizontalScrollBarVisibility="Visible"
                  VerticalScrollBarVisibility="Visible"
                  IsReadOnly="True"
-                 AcceptsReturn="True" >
-
-        </RichTextBox>
+                 AcceptsReturn="True"></RichTextBox>
         
         
 

@@ -45,6 +45,7 @@ namespace MultiKinectProcessor
 
             // JP - Start all Kinects
             KinectAll.kinectAll.StartAllKinects();
+            KinectAll.kinectAll.CalibrateAll();
 
             if (KinectAll.kinectAll.getKinectCount() > 0)
                 Message.Info("KINECTS LIST: " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);

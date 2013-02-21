@@ -55,12 +55,12 @@
     <Compile Include="SourceCode\KinectAll.cs" />
     <Compile Include="SourceCode\KinectSingle.cs" />
     <Compile Include="SourceCode\Message.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="DebugWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="DebugWindow.xaml.cs">
+      <DependentUpon>DebugWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

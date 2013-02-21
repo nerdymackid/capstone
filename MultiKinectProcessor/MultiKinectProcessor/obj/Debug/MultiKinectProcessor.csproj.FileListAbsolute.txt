@@ -1,11 +1,10 @@
-C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\MultiKinectProcessor.exe
-C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\MultiKinectProcessor.pdb
-C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csprojResolveAssemblyReference.cache
-C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MainWindow.baml
-C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MainWindow.g.cs
+C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\DebugWindow.baml
+C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\DebugWindow.g.cs
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor_MarkupCompile.cache
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.g.resources
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.Properties.Resources.resources
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csproj.GenerateResource.Cache
+C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\MultiKinectProcessor.exe
+C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\MultiKinectProcessor.pdb
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.exe
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.pdb

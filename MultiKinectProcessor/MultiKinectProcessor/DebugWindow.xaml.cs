@@ -18,41 +18,86 @@ using Microsoft.Kinect;
 using System.Diagnostics;
 using MultiKinectProcessor.SourceCode;
 
+
 namespace MultiKinectProcessor
 {
 
 
 
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DebugWindow.xaml
+    /// NOTE: SP - A Singleton pattern is used here to avoid static issues, since there will ever only be one instance of DebugWindow instantiated at any given time. 
+    /// Original Author: Sea Pong
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DebugWindow : Window
     {
 
+
         /// <summary>
-        /// Allows Public access of setting debug text box
+        /// Creates an internal private instance of this class
         /// </summary>
-        static public void addtoDebugTextBox(String input, MainWindow window)
+        private static DebugWindow debugWindowPrivateInstance = new DebugWindow();
+
+        /// <summary>
+        /// Sets a public static getter that gets the internal private instance
+        /// </summary>
+        public static DebugWindow debugWindow
         {
-            
-            //this.debugTextBox.Text += input;
-            return;
-        }
-        static public void addtoDebugTextBox(String input, Brush color)
-        {
-            //this.debugTextBox.Foreground = color;
-            //this.debugTextBox.Text += input;
-            return;
+            get { return debugWindowPrivateInstance; }
         }
 
         /// <summary>
-        /// Allows Public access of getting debug text box
+        /// Sorry, Constructor is Private and an Instance of this Class is already created at startup, we should only ever have one instance of this class. Use the static getter method to use this Instance
+        /// </summary>
+        private DebugWindow()
+        {
+            InitializeComponent();
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// Allows appending a line to the debug text box
+        /// </summary>
+        static public void addtoDebugTextBox(String input)
+        {
+            debugWindow.debugTextBox.AppendText("\n" + input) ;
+
+        }
+        static public void addtoDebugTextBox(String input, SolidColorBrush color)
+        {
+
+            debugWindow.debugTextBox.AppendText("\r" + input);
+
+            debugWindow.debugTextBox.Selection.Select(debugWindow.debugTextBox.Document.ContentEnd.GetLineStartPosition(0), debugWindow.debugTextBox.Document.ContentEnd);
+            // TBC debugWindow.debugTextBox.Selection.
+
+            // debugWindow.debugTextBox.AppendText("selection:" + debugWindow.debugTextBox.Selection.Text);
+
+
+
+
+        }
+
+        /// <summary>
+        /// Allows getting the contents of the debug text box
         /// </summary>
         static public String getDebugTextBox()
         {
-            //return this.debugTextBox.Text;
+            //String text = new TextRange(debugWindow.debugTextBox.start
+            //return debugWindow.debugTextBox.Document.;
             return null;
         }
+
+
+
+
+
+
+
 
         /// <summary>
         /// Width of output drawing
@@ -116,11 +161,6 @@ namespace MultiKinectProcessor
 
 
         /// <summary>
-        /// Active Kinect sensor
-        /// </summary>
-        private KinectSensor sensor;
-
-        /// <summary>
         /// Drawing group for skeleton rendering output
         /// </summary>
         private DrawingGroup drawingGroup;
@@ -156,23 +196,6 @@ namespace MultiKinectProcessor
         /// </summary>
         private short clockCounter = 0;
 
-
-        private List<KinectSingle> allKinects;
-
-        
-
-        /// <summary>
-        /// Initializes a new instance of the MainWindow class.
-        /// </summary>
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
-        public MainWindow(KinectAll allKinectsInput)
-        {
-            InitializeComponent();
-            allKinects = allKinectsInput.kinects; 
-        }
 
         /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
@@ -225,10 +248,11 @@ namespace MultiKinectProcessor
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
 
- 
-            if (allKinects.First().kinect != null)
+
+
+            if (KinectAll.kinectAll.getKinectCount() > 0)
             {
-                Message.Info("I SEE SENSOR " + allKinects.First().kinect.UniqueKinectId);
+                Message.Info("I SEE SENSOR " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);
 
 
 
@@ -268,10 +292,10 @@ namespace MultiKinectProcessor
                 ////////////////////////////////////////////
 
                 // Allocate space to put the pixels we'll receive
-                this.colorPixels = new byte[allKinects.First().kinect.ColorStream.FramePixelDataLength];
+                this.colorPixels = new byte[KinectAll.kinectAll.getFirstKinect().ColorStream.FramePixelDataLength];
 
                 // This is the bitmap we'll display on-screen
-                this.colorBitmap = new WriteableBitmap(allKinects.First().kinect.ColorStream.FrameWidth, allKinects.First().kinect.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+                this.colorBitmap = new WriteableBitmap(KinectAll.kinectAll.getFirstKinect().ColorStream.FrameWidth, KinectAll.kinectAll.getFirstKinect().ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
 
                 // Set the image we display to point to the bitmap where we'll put the image data
                 // SP - Send data to the UI here
@@ -283,17 +307,17 @@ namespace MultiKinectProcessor
                 ///////////////////////////////////////////////////////////
 
                 // Add an event handler to be called whenever there is new color frame data
-                allKinects.First().kinect.SkeletonFrameReady += this.SensorSkeletonFrameReady;
+                KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += this.SensorSkeletonFrameReady;
 
                 // Add an event handler to be called whenever there is new color frame data
-                allKinects.First().kinect.ColorFrameReady += this.SensorColorFrameReady;
+                KinectAll.kinectAll.getFirstKinect().ColorFrameReady += this.SensorColorFrameReady;
 
 
 
  
             }
 
-            if (null == allKinects.First().kinect)
+            if (null == KinectAll.kinectAll.getFirstKinect())
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
@@ -306,9 +330,9 @@ namespace MultiKinectProcessor
         /// <param name="e">event arguments</param>
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (null != allKinects.First().kinect)
+            if (null != KinectAll.kinectAll.getFirstKinect())
             {
-                allKinects.First().kinect.Stop();
+                KinectAll.kinectAll.getFirstKinect().Stop();
             }
         }
 
@@ -547,7 +571,7 @@ namespace MultiKinectProcessor
         {
             // Convert point to depth space.  
             // We are not using depth directly, but we do want the points in our 640x480 output resolution.
-            DepthImagePoint depthPoint = allKinects.First().kinect.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
+            DepthImagePoint depthPoint = KinectAll.kinectAll.getFirstKinect().CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
         }
 
@@ -596,15 +620,15 @@ namespace MultiKinectProcessor
         /// <param name="e">event arguments</param>
         private void CheckBoxSeatedModeChanged(object sender, RoutedEventArgs e)
         {
-            if (null != allKinects.First().kinect)
+            if (null != KinectAll.kinectAll.getFirstKinect())
             {
                 if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
                 {
-                    allKinects.First().kinect.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                    KinectAll.kinectAll.getFirstKinect().SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
                 }
                 else
                 {
-                    allKinects.First().kinect.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
+                    KinectAll.kinectAll.getFirstKinect().SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
                 }
             }
         }

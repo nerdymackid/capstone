@@ -36,14 +36,34 @@ namespace MultiKinectProcessor.SourceCode
         public int id;
 
         /// <summary>
-        /// distance kinect is relative to user
+        /// Dynamic distance kinect is relative to user
         /// </summary>
         public double distance;
 
         /// <summary>
-        /// height of the kinect releative to user
+        /// Static distance kinect is relative to user determined from calibration
+        /// </summary>
+        public double distanceStatic;
+
+        /// <summary>
+        /// dynamic height of the kinect relative to user
         /// </summary>
         public double height;
+
+        /// <summary>
+        /// static height of the kinect relative to user determined from calibration
+        /// </summary>
+        public double heightStatic;
+
+        /// <summary>
+        /// dynamic angle of kinect relative to user
+        /// </summary>
+        public double theta;
+
+        /// <summary>
+        /// static angle of kinect to user obtained from calibraton
+        /// </summary>
+        public double thetaStatic;
 
         /// <summary>
         /// skeleton data
@@ -51,30 +71,59 @@ namespace MultiKinectProcessor.SourceCode
         private Skeleton[] skeletonData;
 
         /// <summary>
-        /// angle of kinect relative to user
+        /// skeleton id for the tracked individual
         /// </summary>
-        public double theta
-        {
-            get
-            {
-                return theta;
-            }
-            set
-            {
-                //theta should only between 0 and 360 degrees
-                if (value >= 0 || value <= 360) 
-                {
-                    theta = value;
-                }
-                else
-                {
-                    Message.Error("Error: Set invalid theta value for Kinect: " + id);
-                }
-            }
-        }
-        //Variables for Debugging Purposes
-        int count = 0;
+        private int skeletonId;
 
+        //////////CALIBRATION STABILITY VARIABLES//////////
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private int stabilityDistanceCount;
+        private int stabilityThetaCount;
+        private int stabilityHeightCount;
+        private double stabilityTheta;
+        private double stabilityDistance;
+        private double stabilityHeight;
+        private bool stableCheck;
+
+        //////////CALIBRATION STATIC VARIABLES//////////
+        readonly private double STABILITY_LEVEL=100;
+        readonly private double DISTANCE_BUFFER = 0.1;
+        readonly private double HEIGHT_BUFFER = 0.1;
+        readonly private double ANGLE_BUFFER = 5;
+        
+
+
+        
+      
+
+        /// <summary>
+        /// Class constructor
+        /// Author: Jerry Peng
+        /// </summary>
+        public KinectSingle()
+        {
+
+            Initialize();
+            
+        }
+        /// <summary>
+        /// Description: initializes variables for calibration
+        /// Complexity: O(k)
+        /// Author: Jerry Peng
+        /// </summary>
+        private void Initialize()
+        {
+            stabilityDistanceCount = 0;
+            stabilityThetaCount = 0;
+            stabilityHeightCount = 0;
+            stabilityDistance = 0;
+            stabilityTheta = 0;
+            stabilityHeight = 0;
+            stableCheck = false;
+        }
         /// <summary>
         /// Enables Kinect Sensors
         /// </summary>
@@ -104,14 +153,18 @@ namespace MultiKinectProcessor.SourceCode
         ///<Author: Jerry Peng>
         public bool CalibrateKinect()
         {
+            Initialize();// initialize variables for calibration
 
+            Message.Info("Calibrate kinect with id: " + kinectSensor.UniqueKinectId);
 
             this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
 
             kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
-            // kinect.SkeletonFrameReady += Kinect.kinect_SkeletonFrameReady
+            
+            PositionStable(); //check position stability
 
-            kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
+
+           // kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
 
             return true;
         }
@@ -138,26 +191,75 @@ namespace MultiKinectProcessor.SourceCode
             {
                 if (skel.TrackingState == SkeletonTrackingState.Tracked)
                 {
-                    count++;
-                    if (count > 50)
-                    {
-                        Console.WriteLine("id: " + skel.TrackingId + "shoulder L      X:" + skel.Joints[JointType.ShoulderLeft].Position.X + " Y: " + skel.Joints[JointType.ShoulderLeft].Position.Y + " Z: " + skel.Joints[JointType.ShoulderLeft].Position.Z);
-                        Console.WriteLine("id: " + skel.TrackingId + "shoulder C      X:" + skel.Joints[JointType.ShoulderCenter].Position.X + "Y: " + skel.Joints[JointType.ShoulderCenter].Position.Y + " Z: " + skel.Joints[JointType.ShoulderCenter].Position.Z);
-                        Console.WriteLine("id: " + skel.TrackingId + "shoulder R      X:" + skel.Joints[JointType.ShoulderRight].Position.X + "  Y: " + skel.Joints[JointType.ShoulderRight].Position.Y + " Z: " + skel.Joints[JointType.ShoulderRight].Position.Z);
-                        double theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
-                        theta = Calculation.radians2Degrees(theta);
-                        Console.WriteLine("theta: " + theta.ToString());
-                        //Console.WriteLine("id: " + skel.TrackingId + " X: " + skel.Position.X + " Y: " + skel.Position.Y + " Z: " + skel.Position.Z);
-                        count = 0;
-
-                    }
+                   
+                    theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
+                    theta = Calculation.radians2Degrees(theta);
+                    distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
+                    TestStable();
+                    
                 }
 
             }
         }
 
+        /// <summary>
+        /// checks position stable
+        /// </summary>
+        /// <returns></returns>
+        private bool PositionStable()
+        {
+            while (stableCheck == false)
+            {
 
 
+            }
+            return true;
 
+            
+        }
+        private void TestStable()
+        {
+           // Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
+           // Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
+            if (stabilityTheta == 0 && stabilityDistance == 0)//first
+            {
+                stabilityDistance = distance;
+                stabilityTheta = theta;
+            }
+            else
+            {
+                if (stabilityTheta < (theta + ANGLE_BUFFER) && stabilityTheta > (theta - ANGLE_BUFFER))
+                {
+                    stabilityThetaCount++;
+                }
+                else
+                {
+                    stabilityThetaCount = 0;
+                }
+                if (stabilityDistance < (distance + DISTANCE_BUFFER) && stabilityDistance > (distance - DISTANCE_BUFFER))
+                {
+                    stabilityDistanceCount++;
+                }
+                else
+                {
+                    stabilityDistanceCount = 0;
+                }
+
+                if (stabilityDistanceCount > STABILITY_LEVEL && stabilityThetaCount > STABILITY_LEVEL)
+                {
+                    stableCheck = true;
+                    distanceStatic = stabilityDistance;
+                    thetaStatic = stabilityTheta;
+                }
+                else
+                {
+                    stabilityDistance = distance;
+                    stabilityTheta = theta;
+                }
+            }
+
+
+            
+        }
     }
 }

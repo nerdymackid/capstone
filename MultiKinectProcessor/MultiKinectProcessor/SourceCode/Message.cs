@@ -35,7 +35,7 @@ namespace MultiKinectProcessor.SourceCode
             SolidColorBrush red = new SolidColorBrush(Colors.Red);
 
             DebugWindow.addtoDebugTextBox(msg, red);
-            //Debug.WriteLine("ERROR: " + msg);
+            Debug.WriteLine("ERROR: " + msg);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace MultiKinectProcessor.SourceCode
         {
             SolidColorBrush orange = new SolidColorBrush(Colors.Orange);
             DebugWindow.addtoDebugTextBox(msg, orange);
-            //Debug.WriteLine("Warning: " + msg);
+            Debug.WriteLine("Warning: " + msg);
         }
         /// <summary>
         /// Prints msg in grey to debug console
@@ -56,7 +56,7 @@ namespace MultiKinectProcessor.SourceCode
         {
             SolidColorBrush green = new SolidColorBrush(Colors.Green);
             DebugWindow.addtoDebugTextBox(msg, green);
-            //Debug.WriteLine(msg);
+            Debug.WriteLine(msg);
         }
 
     }

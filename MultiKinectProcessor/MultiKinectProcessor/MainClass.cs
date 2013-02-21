@@ -20,13 +20,17 @@ using MultiKinectProcessor.SourceCode;
 
 namespace MultiKinectProcessor
 {
+    /// <summary>
+    /// Description: contains the Main application entry point
+    /// NOTE: SP - A Singleton pattern is used here to avoid static issues, since there will ever only be one instance of MinClass instantiated at any given time. 
+    /// Modified by: Sea Pong
+    /// </summary>
     public partial class MainClass : System.Windows.Application
     {
 
 
-
         /// <summary>
-        /// Description: Application Entry Point.
+        /// Description: Application Entry Point
         /// Original Author: Sea Pong
         /// Modified by: Jerry Peng
         /// </summary>
@@ -37,37 +41,61 @@ namespace MultiKinectProcessor
         {
             Debug.WriteLine("Entering Main Function");
 
-
-            KinectAll allKinects = new KinectAll();
-
-            allKinects.StartAllKinects();
-
-            Debug.WriteLine("LIST: " + allKinects.kinects.First().kinect.UniqueKinectId);
-
-
-
-            // SP - Create an instance of the MainClass
-            MainClass mainClass = new MainClass();
-
-            // SP - Create a debug window with a reference to it
-            Window debugWindow = new MainWindow(allKinects);
-
  
 
+            // JP - Start all Kinects
+            KinectAll.kinectAll.StartAllKinects();
+
+            if (KinectAll.kinectAll.getKinectCount() > 0)
+                Message.Info("KINECTS LIST: " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);
+            else
+                Message.Warning("No Kinects Found");
+
+
+
             // SP - Run the mainClass instance and open the debugWindow
-            mainClass.Run(debugWindow);
+            MainClass.mainClass.Run(DebugWindow.debugWindow);
+            
 
             // SP - Now waiting for application to close
 
 
         }
 
+
+        // Dont get rid of this
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         public void InitializeComponent()
         {
             //this.StartupUri = new System.Uri("MainWindow.xaml", System.UriKind.Relative);
         }
+
+
+
+        /// <summary>
+        /// Creates an internal private instance of this class
+        /// </summary>
+        private static MainClass mainClassPrivateInstance = new MainClass();
+
+
+        /// <summary>
+        /// Use this public getter as a way to access the privately initialized KinectAll instance (KinectAll.kinectAll.keepgoin)
+        /// </summary>
+        public static MainClass mainClass
+        {
+            get { return mainClassPrivateInstance; }
+        }
+
+        /// <summary>
+        /// Sorry, Constructor is Private and an Instance of this Class is already created at startup, we should only ever have one instance of this class. Use the static getter method to use this Instance.
+        /// </summary>
+        private MainClass()
+        {
+           
+        }
+
+
 
     }
 }

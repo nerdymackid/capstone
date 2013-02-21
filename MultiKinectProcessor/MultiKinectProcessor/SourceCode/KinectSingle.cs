@@ -25,12 +25,35 @@ namespace MultiKinectProcessor.SourceCode
     /// </summary>
     public class KinectSingle
     {
-        public KinectSensor kinect;  //kinect sensor pointer
-        public int id;  //kinect unique id
-        public double distance; //distance kinect is relative to user
-        public double height;  //height of the kinect releative to user
-        private Skeleton[] skeletonData; // skeleton data
-        public double theta //angle of kinect relative to user
+        /// <summary>
+        /// kinect sensor pointer
+        /// </summary>
+        public KinectSensor kinectSensor;
+        
+        /// <summary>
+        /// kinect unique id
+        /// </summary>
+        public int id;
+
+        /// <summary>
+        /// distance kinect is relative to user
+        /// </summary>
+        public double distance;
+
+        /// <summary>
+        /// height of the kinect releative to user
+        /// </summary>
+        public double height;
+
+        /// <summary>
+        /// skeleton data
+        /// </summary>
+        private Skeleton[] skeletonData;
+
+        /// <summary>
+        /// angle of kinect relative to user
+        /// </summary>
+        public double theta
         {
             get
             {
@@ -38,14 +61,14 @@ namespace MultiKinectProcessor.SourceCode
             }
             set
             {
-                if (value >= 0 || value <= 360) //theta only between 0 and 360 degrees
+                //theta should only between 0 and 360 degrees
+                if (value >= 0 || value <= 360) 
                 {
                     theta = value;
                 }
                 else
                 {
                     Message.Error("Error: Set invalid theta value for Kinect: " + id);
-
                 }
             }
         }
@@ -63,12 +86,12 @@ namespace MultiKinectProcessor.SourceCode
             //////////////////////////////
 
             // Turn on the skeleton stream to receive skeleton frames
-            kinect.SkeletonStream.Enable();
-            Message.Info("Skeleton Stream Enabled for " + kinect.UniqueKinectId);
+            kinectSensor.SkeletonStream.Enable();
+            Message.Info("Skeleton Stream Enabled for " + kinectSensor.UniqueKinectId);
 
             // Turn on the color stream to receive color frames
-            kinect.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-            Message.Info("Color Stream Enabled for " + kinect.UniqueKinectId);
+            kinectSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+            Message.Info("Color Stream Enabled for " + kinectSensor.UniqueKinectId);
 
             return true;
 
@@ -83,12 +106,12 @@ namespace MultiKinectProcessor.SourceCode
         {
 
 
-            this.skeletonData = new Skeleton[kinect.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
+            this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
 
-            kinect.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
+            kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
             // kinect.SkeletonFrameReady += Kinect.kinect_SkeletonFrameReady
 
-            kinect.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
+            kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
 
             return true;
         }

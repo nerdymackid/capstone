@@ -10,11 +10,15 @@ none
 false
 DEBUG;TRACE
 
-11151548125
+1-1996261595
 
+<<<<<<< HEAD
 131754652498
+=======
+13-1070766076
+>>>>>>> a019ef17bbd7cb3a97e11a174193f341c8bb2948
 13-1875758363
-MainWindow.xaml;
+DebugWindow.xaml;
 
 False
 

@@ -25,20 +25,38 @@ namespace MultiKinectProcessor.SourceCode
     /// </summary>
     class Message
     {
-        // SP - FIXME print to MainWindow
+
+        /// <summary>
+        /// Prints "ERROR: " + msg in red to debug console
+        /// </summary>
+        /// <param name="msg">String of your error message text</param>
         static public void Error(String msg)
         {
-            //MainWindow.addtoDebugTextBox(MainWindow.getDebugTextBox + msg, Brushes.Red);
-            Debug.WriteLine("ERROR: " + msg);
-        }
-        static public void Warning(String msg)
-        {
-            Debug.WriteLine("WARNING: " + msg);
+            SolidColorBrush red = new SolidColorBrush(Colors.Red);
+
+            DebugWindow.addtoDebugTextBox(msg, red);
+            //Debug.WriteLine("ERROR: " + msg);
         }
 
+        /// <summary>
+        /// Prints "Warning: " + msg in yelllow to debug console
+        /// </summary>
+        /// <param name="msg">String of your warning message text</param>
+        static public void Warning(String msg)
+        {
+            SolidColorBrush orange = new SolidColorBrush(Colors.Orange);
+            DebugWindow.addtoDebugTextBox(msg, orange);
+            //Debug.WriteLine("Warning: " + msg);
+        }
+        /// <summary>
+        /// Prints msg in grey to debug console
+        /// </summary>
+        /// <param name="msg">String of your info message text</param>
         static public void Info(String msg)
         {
-            Debug.WriteLine(msg);
+            SolidColorBrush green = new SolidColorBrush(Colors.Green);
+            DebugWindow.addtoDebugTextBox(msg, green);
+            //Debug.WriteLine(msg);
         }
 
     }

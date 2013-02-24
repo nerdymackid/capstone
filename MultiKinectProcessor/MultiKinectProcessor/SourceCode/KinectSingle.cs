@@ -75,6 +75,7 @@ namespace MultiKinectProcessor.SourceCode
         /// <summary>
         /// variables for calibration stability
         /// </summary>
+        private bool calibrationCheck;
         private int stabilityDistanceCount;
         private int stabilityThetaCount;
         private int stabilityHeightCount;
@@ -118,6 +119,7 @@ namespace MultiKinectProcessor.SourceCode
             stabilityTheta = 0;
             stabilityHeight = 0;
             stableCheck = false;
+            calibrationCheck = false;
         }
         /// <summary>
         /// Enables Kinect Sensors
@@ -140,7 +142,15 @@ namespace MultiKinectProcessor.SourceCode
             return true;
 
         }
+        public bool StartSkelStream()
+        {
+            
+            this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
 
+            kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
+            return true;
+
+        }
 
         ///<Function: CalibrateKinect>
         ///<Description: Calibrates Single Kinect>
@@ -148,22 +158,32 @@ namespace MultiKinectProcessor.SourceCode
         ///<Author: Jerry Peng>
         public bool CalibrateKinect()
         {
-            Initialize();// initialize variables for calibration
+            if (calibrationCheck == true)
+            {
+                Initialize();// initialize variables for calibration
 
-            Message.Info("Calibrate kinect with id: " + kinectSensor.UniqueKinectId);
+                Message.Info("Calibrate kinect with id: " + kinectSensor.UniqueKinectId);
 
-            this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
+                kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_Calibrate);
 
-            kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
+                PositionStable(); //check position stability
+            }
+            else
+            {
+                Message.Error("Calibration check boolean not set to true");
 
-            PositionStable(); //check position stability
-
+            }
 
             // kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
 
             return true;
         }
 
+        public void kinect_Calibrate(object sender, SkeletonFrameReadyEventArgs e)
+        {
+            Message.Info("Calibration start...");
+
+        }
         ///<Function: kinect_SkeletonFrameReady>
         ///<Description: skeleton frame stream event handler>
         ///<Complexity: O(n)>
@@ -190,7 +210,9 @@ namespace MultiKinectProcessor.SourceCode
                     theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
                     theta = Calculation.radians2Degrees(theta);
                     distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
-                    TestStable();
+                   
+                    //TestStable();
+                 
 
                 }
 
@@ -216,6 +238,10 @@ namespace MultiKinectProcessor.SourceCode
         {
             // Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
             // Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
+            if (calibrationCheck == false)
+            {
+                return;
+            }
             if (stabilityTheta == 0 && stabilityDistance == 0)//first
             {
                 stabilityDistance = distance;

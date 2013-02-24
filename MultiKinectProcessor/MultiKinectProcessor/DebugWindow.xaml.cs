@@ -21,11 +21,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Threading;
 using System.Globalization;
 using System.IO;
 using Microsoft.Kinect;
 using System.Diagnostics;
 using MultiKinectProcessor.SourceCode;
+
 
 namespace MultiKinectProcessor
 {
@@ -62,23 +65,15 @@ namespace MultiKinectProcessor
         /// </summary>
         static public void addtoDebugTextBox(String input)
         {
-            debugWindow.debugTextBox.AppendText(input + "\r") ;
+            // Using Dispatcher so it foesnt conflict with another thread
 
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+            {
+                debugWindow.debugTextBox.AppendText(input + "\r");
+            }));
+  
         }
-        static public void addtoDebugTextBox(String input, SolidColorBrush color)
-        {
 
-            debugWindow.debugTextBox.AppendText(input + "\r");
-
-            debugWindow.debugTextBox.Selection.Select(debugWindow.debugTextBox.Document.ContentEnd.GetLineStartPosition(0), debugWindow.debugTextBox.Document.ContentEnd);
-            // TBC debugWindow.debugTextBox.Selection.
-
-            // debugWindow.debugTextBox.AppendText("selection:" + debugWindow.debugTextBox.Selection.Text);
-
-
-
-
-        }
 
         /// <summary>
         /// Allows getting the contents of the debug text box
@@ -630,6 +625,11 @@ namespace MultiKinectProcessor
 
         }
 
+
+
+
+        //// UI EVENT HANDLERS ////
+
         /// <summary>
         /// Handles the checking or unchecking of the seated mode combo box
         /// </summary>
@@ -650,5 +650,14 @@ namespace MultiKinectProcessor
             }
         }
 
+        private void BeginCalibration_Click(object sender, RoutedEventArgs e)
+        {
+            Message.Info("Begin Caibration Button Clicked");
+
+            //KinectAll.kinectAll.CalibrateAll();
+
+            //Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+            //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+        }
     }
 }

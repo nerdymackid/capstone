@@ -166,7 +166,20 @@ namespace MultiKinectProcessor.SourceCode
             return null;
 
         }
+        public void StartSkelStreamAll()
+        {
+                foreach (KinectSingle kinect in kinectsList)
+                {
+                    if (kinect.StartSkelStream() == false)
+                    {
+                        Message.Warning("Unable to Calibrate Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                    }
 
+                }
+
+            
+
+        }
         
         /// <summary>
         /// Calibrate all kinects connected

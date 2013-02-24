@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+ * DebugWindow.xaml.cs
+ * C# file to contruct the Debug Console UI
+ * 
+ * Original Author: Sea Pong <sea@seapong.com>
+ * 
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,21 +27,15 @@ using Microsoft.Kinect;
 using System.Diagnostics;
 using MultiKinectProcessor.SourceCode;
 
-
 namespace MultiKinectProcessor
 {
-
-
-
     /// <summary>
     /// Interaction logic for DebugWindow.xaml
-    /// NOTE: SP - A Singleton pattern is used here to avoid static issues, since there will ever only be one instance of DebugWindow instantiated at any given time. 
+    /// NOTE: SP - A Singleton pattern is used here to avoid static fucntion issues, since there will ever only be one instance of DebugWindow instantiated at any given time. 
     /// Original Author: Sea Pong
     /// </summary>
     public partial class DebugWindow : Window
     {
-
-
         /// <summary>
         /// Creates an internal private instance of this class
         /// </summary>
@@ -53,11 +56,6 @@ namespace MultiKinectProcessor
         {
             InitializeComponent();
         }
-
-
-
-
-
 
         /// <summary>
         /// Allows appending a line to the debug text box
@@ -91,13 +89,6 @@ namespace MultiKinectProcessor
             //return debugWindow.debugTextBox.Document.;
             return null;
         }
-
-
-
-
-
-
-
 
         /// <summary>
         /// Width of output drawing
@@ -164,7 +155,6 @@ namespace MultiKinectProcessor
         /// </summary>        
         private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
 
-
         /// <summary>
         /// Drawing group for skeleton rendering output
         /// </summary>
@@ -185,7 +175,6 @@ namespace MultiKinectProcessor
         /// </summary>
         private DrawingImage imageSourceTopView;
 
-
         /// <summary>
         /// Bitmap that will hold color information
         /// </summary>
@@ -200,7 +189,6 @@ namespace MultiKinectProcessor
         /// short designed to create a "clock" for user interface design
         /// </summary>
         private short clockCounter = 0;
-
 
         /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
@@ -242,9 +230,6 @@ namespace MultiKinectProcessor
             }
         }
 
-
- 
-
         /// <summary>
         /// Execute startup tasks
         /// </summary>
@@ -257,7 +242,7 @@ namespace MultiKinectProcessor
 
             if (KinectAll.kinectAll.getKinectCount() > 0)
             {
-                Message.Info("I SEE SENSOR " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);
+                Message.Info("debugWindow connected to sensor " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);
 
 
 
@@ -309,15 +294,16 @@ namespace MultiKinectProcessor
 
                 ///////////////////////////////////////////////////////////
                 //// SP - CALL HANDLERS TO PROCESS SKELETON/COLOR DATA ////
+                //// these functions are called at 30 calls per sec    ////
                 ///////////////////////////////////////////////////////////
 
-                // Add an event handler to be called whenever there is new color frame data
-                KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += this.SensorSkeletonFrameReady;
+                // Add an event handler to be called whenever there is new skeleton frame data
+                // KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += this.SensorSkeletonFrameReady;
+                KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(SensorSkeletonFrameReady);
 
                 // Add an event handler to be called whenever there is new color frame data
-                KinectAll.kinectAll.getFirstKinect().ColorFrameReady += this.SensorColorFrameReady;
-
-
+                // KinectAll.kinectAll.getFirstKinect().ColorFrameReady += this.SensorColorFrameReady;
+                KinectAll.kinectAll.getFirstKinect().ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(SensorColorFrameReady);
 
  
             }
@@ -349,6 +335,7 @@ namespace MultiKinectProcessor
         private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
             Skeleton[] skeletons = new Skeleton[0];
+
 
             // SP - Import Skeleton Data
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
@@ -412,60 +399,41 @@ namespace MultiKinectProcessor
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             tracked++;
-                        }
-                        if (tracked > 1)
-                        {
+                            if (tracked > 1)
+                            {
+                                // SP - Write error that only one skeleton can exist right now
+                                this.statusBarText.Foreground = errorMessage;
+                                this.statusBarText.Text = "During calibration, only 1 person may be in scene as the controller. " + skeletons.Length + " skeletons detected";
 
-                            // SP - Write error that only one skeleton can exist right now
-                            this.statusBarText.Foreground = errorMessage;
-                            this.statusBarText.Text = "During calibration, only 1 person may be in scene as the controller. " + skeletons.Length + " skeletons detected";
-                            break;
+                                break;
+                            }
                         }
+
                     }
 
                     if (tracked == 1)
                     {
-
-
                         clockCounter++;
 
                         // SP - Write Currently calibrating message
                         this.statusBarText.Foreground = infoMessage;
                         this.statusBarText.Text = "Calibration in Progress";
 
-
-                        dctv.DrawEllipse(
-                        this.centerPointBrush,
-                        null,
-                        new Point(RenderWidth / 2.0, RenderHeight / 2.0),
-                        30,
-                        30);
-
-     
-
+                        dctv.DrawEllipse(this.centerPointBrush, null, new Point(RenderWidth / 2.0, RenderHeight / 2.0), 30, 30);
+                        
                         Point kinectLocation = new Point();
                         kinectLocation = KinectPointToScreen(KinectAll.kinectAll.kinectsList.First().distance, KinectAll.kinectAll.kinectsList.First().theta);
-
-
+                        
                         dctv.DrawEllipse(this.kinectPointBrush, null, kinectLocation, 20, 20);
-
-
-
                         dctv.DrawLine(inferredBonePen, new Point(RenderWidth / 2.0, RenderHeight / 2.0), kinectLocation);
                     }
-
                     else
                     {
                         // SP - WriteStep into frame message
                         this.statusBarText.Foreground = infoMessage;
                         this.statusBarText.Text = "Please step into the Kinect Frame";
                     }
-
-
-
                 }
-
-               
 
                 // prevent drawing outside of our render area
                 this.drawingGroupTopView.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
@@ -496,7 +464,6 @@ namespace MultiKinectProcessor
                 }
             }
         }
-
 
         /// <summary>
         /// Draws a skeleton's bones and joints
@@ -585,7 +552,6 @@ namespace MultiKinectProcessor
             DepthImagePoint depthPoint = KinectAll.kinectAll.getFirstKinect().CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
         }
-
 
         /// <summary>
         /// Maps a KinectPoint to lie within our render space and converts to Point
@@ -683,8 +649,6 @@ namespace MultiKinectProcessor
                 }
             }
         }
-
-
 
     }
 }

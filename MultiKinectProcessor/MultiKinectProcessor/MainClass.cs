@@ -48,7 +48,12 @@ namespace MultiKinectProcessor
             KinectAll.kinectAll.CalibrateAll();
 
             if (KinectAll.kinectAll.getKinectCount() > 0)
-                Message.Info("KINECTS LIST: " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);
+            {
+                foreach (KinectSingle kinect in KinectAll.kinectAll.kinectsList)
+                {
+                    Message.Info("KINECTS LIST: " + kinect.kinectSensor.UniqueKinectId);
+                }
+            }
             else
                 Message.Warning("No Kinects Found");
 
@@ -89,14 +94,11 @@ namespace MultiKinectProcessor
         }
 
         /// <summary>
-        /// Sorry, Constructor is Private and an Instance of this Class is already created at startup, we should only ever have one instance of this class. Use the static getter method to use this Instance.
+        /// Sorry, the MainClass constructor is Private and an Instance of this Class is already created at startup, we should only ever have one instance of this class. Use the static getter method to use this inital instance.
         /// </summary>
         private MainClass()
         {
            
         }
-
-
-
     }
 }

@@ -29,41 +29,36 @@ namespace MultiKinectProcessor.SourceCode
         /// kinect sensor pointer
         /// </summary>
         public KinectSensor kinectSensor;
-        
-        /// <summary>
-        /// kinect unique id
-        /// </summary>
-        public int id;
 
         /// <summary>
         /// Dynamic distance kinect is relative to user
         /// </summary>
-        public double distance;
+        private double distance;
 
         /// <summary>
         /// Static distance kinect is relative to user determined from calibration
         /// </summary>
-        public double distanceStatic;
+        private double distanceStatic;
 
         /// <summary>
         /// dynamic height of the kinect relative to user
         /// </summary>
-        public double height;
+        private double height;
 
         /// <summary>
         /// static height of the kinect relative to user determined from calibration
         /// </summary>
-        public double heightStatic;
+        private double heightStatic;
 
         /// <summary>
         /// dynamic angle of kinect relative to user
         /// </summary>
-        public double theta;
+        private double theta;
 
         /// <summary>
         /// static angle of kinect to user obtained from calibraton
         /// </summary>
-        public double thetaStatic;
+        private double thetaStatic;
 
         /// <summary>
         /// skeleton data
@@ -78,7 +73,7 @@ namespace MultiKinectProcessor.SourceCode
         //////////CALIBRATION STABILITY VARIABLES//////////
 
         /// <summary>
-        /// 
+        /// variables for calibration stability
         /// </summary>
         private int stabilityDistanceCount;
         private int stabilityThetaCount;
@@ -256,10 +251,71 @@ namespace MultiKinectProcessor.SourceCode
                     stabilityDistance = distance;
                     stabilityTheta = theta;
                 }
-            }
+            }   
+        }
 
+        ////////////////////////////////////////////////Access Functions///////////////////////////////////////////
 
-            
+        /// <summary>
+        /// gets pointer to kinectSensor
+        /// </summary>
+        /// <returns></returns>
+        public KinectSensor GetKinectSensor()
+        {
+            return kinectSensor;
+        }
+        /// <summary>
+        /// Description gets dynamic distance
+        /// </summary>
+        /// <returns>double</returns>
+        public double GetDynamicDistance()
+        {
+            return distance;
+
+        }
+        /// <summary>
+        /// Gets static distance obtained after calibration.
+        /// </summary>
+        /// <returns></returns>
+        public double GetStaticDistance()
+        {
+            return distanceStatic;
+        }
+        /// <summary>
+        /// Get dynamic angle  of kinect to user
+        /// </summary>
+        /// <returns></returns>
+        public double GetDynamicAngle()
+        {
+            return theta;
+        }
+        /// <summary>
+        /// Get static angle of kinect to user after calibration
+        /// </summary>
+        /// <returns></returns>
+        public double GetStaticAngle()
+        {
+            return thetaStatic;
+        }
+        /// <summary>
+        /// Get dynamic height of user NOTE: NOT IMPLEMENTED YET
+        /// </summary>
+        /// <returns></returns>
+        public double GetDynamicHeight()
+        {
+            return height;
+        }
+        /// <summary>
+        /// get Static height of user after calibration NOTE: NOT IMPLEMENTED YET
+        /// </summary>
+        /// <returns></returns>
+        public double GetStaticHeight()
+        {
+            return heightStatic;
+        }
+        public Skeleton[] GetSkelData()
+        {
+            return skeletonData;
         }
     }
 }

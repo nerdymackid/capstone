@@ -164,21 +164,53 @@ namespace MultiKinectProcessor.SourceCode
             return null;
 
         }
+
+        /// <summary>
+        /// Start Skeleton Data Input Stream
+        /// </summary>
         public void StartSkelStreamAll()
         {
                 foreach (KinectSingle kinect in kinectsList)
                 {
                     if (kinect.StartSkelStream() == false)
                     {
-                        Message.Warning("Unable to Calibrate Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                        Message.Warning("Unable to Start Skeleton Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
                     }
-
                 }
-
-            
-
         }
-        
+
+        // AS
+        /// <summary>
+        /// Start Color Data Input Stream
+        /// </summary>
+        public void StartColorStreamAll()
+        {
+            foreach (KinectSingle kinect in kinectsList)
+            {
+                if (kinect.StartColorStream() == false)
+                {
+                    Message.Warning("Unable to Start Color Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                }
+            }
+        }
+
+        // AS
+        /// <summary>
+        /// Start Depth Data Input Stream
+        /// </summary>
+        public void StartDepthStreamAll()
+        {
+            foreach (KinectSingle kinect in kinectsList)
+            {
+                if (kinect.StartDepthStream() == false)
+                {
+                    Message.Warning("Unable to Start Depth Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                }
+            }
+        }
+
+
+
         /// <summary>
         /// Calibrate all kinects connected
         /// </summary>

@@ -45,6 +45,10 @@ namespace MultiKinectProcessor
 
             // JP - Start all Kinects
             KinectAll.kinectAll.StartAllKinects();
+            KinectAll.kinectAll.CalibrateAll();
+            Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+            Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+            
 
 
             if (KinectAll.kinectAll.getKinectCount() > 0)
@@ -60,8 +64,7 @@ namespace MultiKinectProcessor
 
 
             // SP - Run the mainClass instance and open the debugWindow
-            MainClass.mainClass.Run(DebugWindow.debugWindow);
-            
+          //  MainClass.mainClass.Run(DebugWindow.debugWindow);
 
 
             KinectAll.kinectAll.CalibrateAll();

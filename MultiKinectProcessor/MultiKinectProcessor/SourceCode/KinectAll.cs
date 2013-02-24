@@ -124,6 +124,7 @@ namespace MultiKinectProcessor.SourceCode
         private bool AddKinect(KinectSensor k)
         {
             bool add = false;
+<<<<<<< HEAD
             if (kinectsList == null)
             {
                 add = true;
@@ -142,6 +143,26 @@ namespace MultiKinectProcessor.SourceCode
                 newKinect.kinectSensor = k;
                 kinectsList.Add(newKinect);
                 newKinect.enableKinectSensors();
+=======
+            if (kinectsList == null) 
+            {
+                add = true;
+            }
+            else
+            {
+                if (FindKinect(k)==null)
+                {
+                    add =  true; // This kinectSensor has been successfully added
+                }
+            }
+
+            if (add == true)
+            {
+                KinectSingle newKinect = new KinectSingle();
+                newKinect.kinectSensor = k;
+                kinectsList.Add(newKinect);
+                newKinect.enableKinectSensors();   
+>>>>>>> origin/master
             }
             return add;
         }

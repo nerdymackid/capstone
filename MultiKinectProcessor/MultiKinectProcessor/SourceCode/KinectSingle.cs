@@ -17,6 +17,9 @@ using System.IO;
 using Microsoft.Kinect;
 using System.Diagnostics;
 
+using Microsoft.Kinect.Toolkit;
+using Microsoft.Kinect.Toolkit.FaceTracking;
+
 namespace MultiKinectProcessor.SourceCode
 {
     /// <summary>
@@ -90,6 +93,14 @@ namespace MultiKinectProcessor.SourceCode
         readonly private double HEIGHT_BUFFER = 0.1;
         readonly private double ANGLE_BUFFER = 5;
 
+        /// <summary>
+        /// Supports Facetracking
+        /// </summary>
+        private FaceTracker faceTracker;
+        private FaceTrackFrame faceTrackFrame;
+        private bool faceDetected;
+        private byte[] colorPixels;
+        private DepthImagePixel[] depthPixels;
 
 
 
@@ -142,12 +153,50 @@ namespace MultiKinectProcessor.SourceCode
             return true;
 
         }
+
+        /// <summary>
+        /// Starts KinectSingle Skeleton Stream
+        /// </summary>
+        /// <returns>bool</returns>
         public bool StartSkelStream()
         {
             
             this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
 
             kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
+
+            return true;
+
+        }
+
+        // AS
+        /// <summary>
+        /// Starts KinectSingle Color Stream
+        /// </summary>
+        /// <returns>bool</returns>
+        public bool StartColorStream()
+        {
+            // Allocate space to put the pixels we'll receive
+            this.colorPixels = new byte[kinectSensor.ColorStream.FramePixelDataLength];
+
+            kinectSensor.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(kinect_ColorFrameReady);
+
+            return true;
+
+        }
+
+        // AS
+        /// <summary>
+        /// Starts KinectSingle Depth Stream
+        /// </summary>
+        /// <returns>bool</returns>
+        public bool StartDepthStream()
+        {
+
+            this.depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+
+            kinectSensor.DepthFrameReady += new EventHandler<DepthImageFrameReadyEventArgs>(kinect_DepthFrameReady);
+
             return true;
 
         }
@@ -184,6 +233,8 @@ namespace MultiKinectProcessor.SourceCode
             Message.Info("Calibration start...");
 
         }
+
+
         ///<Function: kinect_SkeletonFrameReady>
         ///<Description: skeleton frame stream event handler>
         ///<Complexity: O(n)>
@@ -217,6 +268,45 @@ namespace MultiKinectProcessor.SourceCode
                 }
 
             }
+        }
+
+        //  AS
+        /// <summary>
+        /// Event Handler for Color Frame
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void kinect_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            {
+                if (colorFrame != null)
+                {
+                    // Copy the pixel data from the image to a storage array
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+                }
+            }
+        }
+
+        //  AS
+        /// <summary>
+        /// Event Handler for Depth Frame
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        public void kinect_DepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
+        {
+
+            using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
+            {
+                if (depthFrame != null)
+                {
+                    // Copy the pixel data from the image to a storage array
+                    depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
+                }
+            }
+
         }
 
         /// <summary>
@@ -342,6 +432,14 @@ namespace MultiKinectProcessor.SourceCode
         public Skeleton[] GetSkelData()
         {
             return skeletonData;
+        }
+        public byte[] GetColorPixels()
+        {
+            return colorPixels;
+        }
+        public DepthImagePixel[] GetDepthPixels()
+        {
+            return depthPixels;
         }
     }
 }

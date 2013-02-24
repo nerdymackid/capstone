@@ -237,7 +237,7 @@ namespace MultiKinectProcessor
 
             if (KinectAll.kinectAll.getKinectCount() > 0)
             {
-                Message.Info("debugWindow connected to sensor " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);
+                Message.Info("debugWindow connected to sensor " + KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.UniqueKinectId);
 
 
 
@@ -277,10 +277,10 @@ namespace MultiKinectProcessor
                 ////////////////////////////////////////////
 
                 // Allocate space to put the pixels we'll receive
-                this.colorPixels = new byte[KinectAll.kinectAll.getFirstKinect().ColorStream.FramePixelDataLength];
+                this.colorPixels = new byte[KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FramePixelDataLength];
 
                 // This is the bitmap we'll display on-screen
-                this.colorBitmap = new WriteableBitmap(KinectAll.kinectAll.getFirstKinect().ColorStream.FrameWidth, KinectAll.kinectAll.getFirstKinect().ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+                this.colorBitmap = new WriteableBitmap(KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameWidth, KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
 
                 // Set the image we display to point to the bitmap where we'll put the image data
                 // SP - Send data to the UI here
@@ -294,16 +294,16 @@ namespace MultiKinectProcessor
 
                 // Add an event handler to be called whenever there is new skeleton frame data
                 // KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += this.SensorSkeletonFrameReady;
-                KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(SensorSkeletonFrameReady);
+                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(SensorSkeletonFrameReady);
 
                 // Add an event handler to be called whenever there is new color frame data
                 // KinectAll.kinectAll.getFirstKinect().ColorFrameReady += this.SensorColorFrameReady;
-                KinectAll.kinectAll.getFirstKinect().ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(SensorColorFrameReady);
+                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(SensorColorFrameReady);
 
  
             }
 
-            if (null == KinectAll.kinectAll.getFirstKinect())
+            if (null == KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
@@ -316,9 +316,9 @@ namespace MultiKinectProcessor
         /// <param name="e">event arguments</param>
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (null != KinectAll.kinectAll.getFirstKinect())
+            if (null != KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
             {
-                KinectAll.kinectAll.getFirstKinect().Stop();
+                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.Stop();
             }
         }
 
@@ -544,7 +544,7 @@ namespace MultiKinectProcessor
         {
             // Convert point to depth space.  
             // We are not using depth directly, but we do want the points in our 640x480 output resolution.
-            DepthImagePoint depthPoint = KinectAll.kinectAll.getFirstKinect().CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
+            DepthImagePoint depthPoint = KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
         }
 
@@ -637,15 +637,15 @@ namespace MultiKinectProcessor
         /// <param name="e">event arguments</param>
         private void CheckBoxSeatedModeChanged(object sender, RoutedEventArgs e)
         {
-            if (null != KinectAll.kinectAll.getFirstKinect())
+            if (null != KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
             {
                 if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
                 {
-                    KinectAll.kinectAll.getFirstKinect().SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                    KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
                 }
                 else
                 {
-                    KinectAll.kinectAll.getFirstKinect().SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
+                    KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
                 }
             }
         }

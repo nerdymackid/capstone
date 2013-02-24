@@ -74,11 +74,9 @@ namespace MultiKinectProcessor.SourceCode
 
 
         // SP/JP - Temporary function to just get one kinect pointer
-        public KinectSensor getFirstKinect()
+        public KinectSingle getFirstKinectSingle()
         {
-
-            return kinectsList.First().kinectSensor;
-
+            return kinectsList.First();
         }
 
 

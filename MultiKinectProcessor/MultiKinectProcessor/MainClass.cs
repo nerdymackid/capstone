@@ -46,6 +46,9 @@ namespace MultiKinectProcessor
             // JP - Start all Kinects
             KinectAll.kinectAll.StartAllKinects();
 
+            KinectAll.kinectAll.StartSkelStreamAll();
+
+
 
             if (KinectAll.kinectAll.getKinectCount() > 0)
             {
@@ -64,10 +67,10 @@ namespace MultiKinectProcessor
             
 
 
-            KinectAll.kinectAll.CalibrateAll();
+          //  KinectAll.kinectAll.CalibrateAll();
 
-            Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
-            Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+           // Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+            //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
   
             // SP - Now waiting for application to close
 

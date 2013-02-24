@@ -90,7 +90,7 @@ namespace MultiKinectProcessor.SourceCode
         {
             // Get only the first kinect rewrite latter to include all kinects attached
             KinectSensor kinect = KinectSensor.KinectSensors.FirstOrDefault(s => s.Status == KinectStatus.Connected);
-            
+
 
 
 
@@ -115,7 +115,7 @@ namespace MultiKinectProcessor.SourceCode
                     kinect = null;
                 }
 
-                Debug.WriteLine("Kinect started...");
+                Message.Info("Kinect started...");
                 count++;
 
             }
@@ -123,35 +123,49 @@ namespace MultiKinectProcessor.SourceCode
 
         private bool AddKinect(KinectSensor k)
         {
+            bool add = false;
             if (kinectsList == null)
             {
-                //FIXME - JP better way to add the first kinect?
+                add = true;
+            }
+            else
+            {
+                if (FindKinect(k) == null)
+                {
+                    add = true; // This kinectSensor has been successfully added
+                }
+            }
+
+            if (add == true)
+            {
                 KinectSingle newKinect = new KinectSingle();
                 newKinect.kinectSensor = k;
                 kinectsList.Add(newKinect);
                 newKinect.enableKinectSensors();
-                return true;
             }
-            else
+            return add;
+        }
+        /// <summary>
+        /// Description: Finds specific kinect device in kinectsList
+        /// Author: Jerry Peng
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns>KinectSingle</returns>
+        private KinectSingle FindKinect(KinectSensor k)
+        {
+            if (kinectsList != null)
             {
                 foreach (KinectSingle kinect in kinectsList)
                 {
                     if (kinect.kinectSensor.UniqueKinectId == k.UniqueKinectId)
                     {
-                        return false; // This kinectSensor is already added
+                        return kinect; // kinect device  found
                     }
                 }
-
-                KinectSingle newKinect = new KinectSingle();
-                newKinect.kinectSensor = k;
-                kinectsList.Add(newKinect);
-                newKinect.enableKinectSensors();
-
-                return true; // This kinectSensor has been successfully added
             }
+            return null;
 
         }
-
 
         
         /// <summary>

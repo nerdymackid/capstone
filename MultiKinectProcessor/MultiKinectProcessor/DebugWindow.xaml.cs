@@ -422,7 +422,7 @@ namespace MultiKinectProcessor
                         dctv.DrawEllipse(this.centerPointBrush, null, new Point(RenderWidth / 2.0, RenderHeight / 2.0), 30, 30);
                         
                         Point kinectLocation = new Point();
-                        kinectLocation = KinectPointToScreen(KinectAll.kinectAll.kinectsList.First().distance, KinectAll.kinectAll.kinectsList.First().theta);
+                        kinectLocation = KinectPointToScreen(KinectAll.kinectAll.kinectsList.First().GetDynamicDistance(), KinectAll.kinectAll.kinectsList.First().GetDynamicAngle());
                         
                         dctv.DrawEllipse(this.kinectPointBrush, null, kinectLocation, 20, 20);
                         dctv.DrawLine(inferredBonePen, new Point(RenderWidth / 2.0, RenderHeight / 2.0), kinectLocation);

@@ -21,3 +21,4 @@ C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinec
 C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csproj.GenerateResource.Cache
 C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.exe
 C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.pdb
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csprojResolveAssemblyReference.cache

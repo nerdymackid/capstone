@@ -9,3 +9,15 @@ C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProc
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.exe
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.pdb
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csprojResolveAssemblyReference.cache
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\MultiKinectProcessor.exe
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\MultiKinectProcessor.pdb
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\Microsoft.Kinect.Toolkit.dll
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\Microsoft.Kinect.Toolkit.FaceTracking.dll
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\DebugWindow.baml
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\DebugWindow.g.cs
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor_MarkupCompile.cache
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.g.resources
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.Properties.Resources.resources
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csproj.GenerateResource.Cache
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.exe
+C:\Users\Alex Scarlett\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.pdb

@@ -175,10 +175,6 @@ namespace MultiKinectProcessor
         /// </summary>
         private WriteableBitmap colorBitmap;
 
-        /// <summary>
-        /// Intermediate storage for the color data received from the camera
-        /// </summary>
-        private byte[] colorPixels;
 
         /// <summary>
         /// short designed to create a "clock" for user interface design
@@ -276,9 +272,7 @@ namespace MultiKinectProcessor
                 //// SP - PREP COLOR STREAM DATA OUTPUT ////
                 ////////////////////////////////////////////
 
-                // Allocate space to put the pixels we'll receive
-                this.colorPixels = new byte[KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FramePixelDataLength];
-
+               
                 // This is the bitmap we'll display on-screen
                 this.colorBitmap = new WriteableBitmap(KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameWidth, KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
 
@@ -445,15 +439,12 @@ namespace MultiKinectProcessor
         {
             using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
             {
-                if (colorFrame != null)
-                {
-                    // Copy the pixel data from the image to a temporary array
-                    colorFrame.CopyPixelDataTo(this.colorPixels);
-
+                if (colorFrame != null /* && KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels() != null */)
+                {               
                     // Write the pixel data into our bitmap
                     this.colorBitmap.WritePixels(
                         new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
-                        this.colorPixels,
+                        KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels(),
                         this.colorBitmap.PixelWidth * sizeof(int),
                         0);
                 }

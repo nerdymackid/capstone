@@ -175,6 +175,9 @@ namespace MultiKinectProcessor
         /// </summary>
         private WriteableBitmap colorBitmap;
 
+        private byte[] colorPixels;
+        
+
 
         /// <summary>
         /// short designed to create a "clock" for user interface design
@@ -272,6 +275,7 @@ namespace MultiKinectProcessor
                 //// SP - PREP COLOR STREAM DATA OUTPUT ////
                 ////////////////////////////////////////////
 
+                this.colorPixels = new byte[KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FramePixelDataLength];
                
                 // This is the bitmap we'll display on-screen
                 this.colorBitmap = new WriteableBitmap(KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameWidth, KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
@@ -288,11 +292,33 @@ namespace MultiKinectProcessor
 
                 // Add an event handler to be called whenever there is new skeleton frame data
                 // KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += this.SensorSkeletonFrameReady;
-                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(SensorSkeletonFrameReady);
+                try
+                {
+                    KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(SensorSkeletonFrameReady);
+                    Message.Info("Skeleton Frame Handler in debugWindow started");
+
+                }
+                catch
+                {
+                    Message.Warning("Skeleton Frame Handler in debugWindow not started");
+
+                }
+
 
                 // Add an event handler to be called whenever there is new color frame data
                 // KinectAll.kinectAll.getFirstKinect().ColorFrameReady += this.SensorColorFrameReady;
-                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(SensorColorFrameReady);
+                try
+                {
+                   KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(SensorColorFrameReady);
+                   Message.Info("Color Frame Handler in debugWindow started");
+
+                }
+                catch
+                {
+                    Message.Warning("Color Frame Handler in debugWindow not started");
+
+                }
+
 
  
             }
@@ -440,7 +466,12 @@ namespace MultiKinectProcessor
             using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
             {
                 if (colorFrame != null /* && KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels() != null */)
-                {               
+                {
+
+
+                    // Copy the pixel data from the image to a storage array
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+
                     // Write the pixel data into our bitmap
                     this.colorBitmap.WritePixels(
                         new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),

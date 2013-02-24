@@ -46,9 +46,10 @@ namespace MultiKinectProcessor
             // JP - Start all Kinects
             KinectAll.kinectAll.StartAllKinects();
 
-            KinectAll.kinectAll.StartSkelStreamAll();
-            KinectAll.kinectAll.StartColorStreamAll();
-            KinectAll.kinectAll.StartDepthStreamAll();
+            //KinectAll.kinectAll.StartSkelStreamAll();
+            //KinectAll.kinectAll.StartColorStreamAll();
+            //KinectAll.kinectAll.StartDepthStreamAll();
+            KinectAll.kinectAll.StartUnifiedDataStreamAll();
 
 
             if (KinectAll.kinectAll.getKinectCount() > 0)

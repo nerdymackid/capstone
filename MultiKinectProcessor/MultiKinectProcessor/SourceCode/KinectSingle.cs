@@ -26,12 +26,17 @@ namespace MultiKinectProcessor.SourceCode
     /// Description: Contains code for controlling a single Kinect
     /// Author: Jerry Peng
     /// </summary>
-    public class KinectSingle
+    public class KinectSingle : UserControl
     {
         /// <summary>
         /// kinect sensor pointer
         /// </summary>
         public KinectSensor kinectSensor;
+
+        /// <summary>
+        /// Dependency Property that initiates a Property Change Callback (Event Handler) upon a KinectSensor Change
+        /// </summary>
+        public DependencyProperty KinectSensorChangeProperty;
 
         /// <summary>
         /// Dynamic distance kinect is relative to user
@@ -150,10 +155,17 @@ namespace MultiKinectProcessor.SourceCode
             kinectSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
             Message.Info("Color Stream Enabled for " + kinectSensor.UniqueKinectId);
 
+            // Turn on the color stream to receive depth frames
+            kinectSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+            Message.Info("Depth Stream Enabled for " + kinectSensor.UniqueKinectId);
+
             return true;
 
         }
 
+
+        /*
+         
         /// <summary>
         /// Starts KinectSingle Skeleton Stream
         /// </summary>
@@ -201,6 +213,60 @@ namespace MultiKinectProcessor.SourceCode
 
         }
 
+        */
+
+        /// <summary>
+        /// Starts KinectSingle Skeleton, Color, and Depth Streams
+        /// </summary>
+        /// <returns></returns>
+        public bool StartAllDataStreams()
+        {
+            try
+            {
+                this.KinectSensorChangeProperty = DependencyProperty.Register(
+                "KinectSingle",
+                typeof(KinectSensor),
+                typeof(KinectSingle),
+                new PropertyMetadata(
+                    null, (o, args) => ((KinectSingle)o).OnSensorChanged((KinectSensor)args.OldValue, (KinectSensor)args.NewValue)));
+            }
+            catch
+            {
+                Message.Error("Could not create a DependencyProperty to sense data stream change. KinectSingle @ line 210");
+                return false;
+            }
+
+            Message.Info("Successfully started SensorChangeProperty");
+
+            // Allocate Memory for Data Streams
+            this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength];
+            this.colorPixels = new byte[kinectSensor.ColorStream.FramePixelDataLength];
+            this.depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+
+            return true;
+        }
+
+        /// <summary>
+        /// Intermediate Function to manually update the data steam handler stack
+        /// </summary>
+        /// <param name="oldSensor"></param>
+        /// <param name="newSensor"></param>
+        private void OnSensorChanged(KinectSensor oldSensor, KinectSensor newSensor)
+        {
+            if (oldSensor != null)
+            {
+                oldSensor.AllFramesReady -= this.kinect_AllFramesReady;
+               //AS SP this.ResetFaceTracking();
+            }
+            if (newSensor != null)
+            {
+                newSensor.AllFramesReady += this.kinect_AllFramesReady;
+            }
+        }
+
+        
+
+
         ///<Function: CalibrateKinect>
         ///<Description: Calibrates Single Kinect>
         ///<Complexity: O(k)>
@@ -234,7 +300,7 @@ namespace MultiKinectProcessor.SourceCode
 
         }
 
-
+        /*
         ///<Function: kinect_SkeletonFrameReady>
         ///<Description: skeleton frame stream event handler>
         ///<Complexity: O(n)>
@@ -308,6 +374,56 @@ namespace MultiKinectProcessor.SourceCode
             }
 
         }
+
+        */
+
+        /// <summary>
+        /// Handler for all frames Frames
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="allFramesReadyEventArgs"></param>
+        private void kinect_AllFramesReady(object sender, AllFramesReadyEventArgs allFramesReadyEventArgs)
+        {
+            using (ColorImageFrame colorFrame = allFramesReadyEventArgs.OpenColorImageFrame())
+            using (DepthImageFrame depthFrame = allFramesReadyEventArgs.OpenDepthImageFrame())
+            using (SkeletonFrame skeletonFrame = allFramesReadyEventArgs.OpenSkeletonFrame())
+            {
+                if (colorFrame == null || depthFrame == null || skeletonFrame == null)
+                {
+                    Message.Warning("Not All Frames Present in Unified Event Handler. Skipping this data frame set...");
+                    return;
+                }
+
+                //// SKELETON ////
+                //SP temp if (this.skeletonData != null) // check that a frame is available
+                {
+                    skeletonFrame.CopySkeletonDataTo(this.skeletonData); // get the skeletal information in this frame
+                }
+
+
+                //// COLOR IMAGE ////
+                //SP temp if (this.colorPixels != null)
+                {
+                    // Copy the pixel data from the image to a storage array
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+
+
+                }
+
+                //// DEPTH IMAGE ////
+                //SP temp if (this.depthPixels != null)
+                {
+                    // Copy the pixel data from the image to a storage array
+                    depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
+                }
+
+            }
+        }
+
+
+
+
+        
 
         /// <summary>
         /// checks position stable

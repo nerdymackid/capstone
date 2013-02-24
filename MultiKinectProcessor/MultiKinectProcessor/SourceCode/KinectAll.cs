@@ -165,6 +165,8 @@ namespace MultiKinectProcessor.SourceCode
 
         }
 
+        /*
+         
         /// <summary>
         /// Start Skeleton Data Input Stream
         /// </summary>
@@ -205,6 +207,24 @@ namespace MultiKinectProcessor.SourceCode
                 if (kinect.StartDepthStream() == false)
                 {
                     Message.Warning("Unable to Start Depth Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                }
+            }
+        }
+
+        */
+
+
+        // AS
+        /// <summary>
+        /// Start ALL Data Input Stream
+        /// </summary>
+        public void StartUnifiedDataStreamAll()
+        {
+            foreach (KinectSingle kinect in kinectsList)
+            {
+                if (kinect.StartAllDataStreams() == false)
+                {
+                    Message.Warning("Unable to Start Unified Data Streams on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
                 }
             }
         }

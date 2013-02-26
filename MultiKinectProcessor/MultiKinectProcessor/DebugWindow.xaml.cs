@@ -284,7 +284,7 @@ namespace MultiKinectProcessor
                 // SP - Send data to the UI here
                 this.Video.Source = this.colorBitmap;
 
-
+                /*
                 ///////////////////////////////////////////////////////////
                 //// SP - CALL HANDLERS TO PROCESS SKELETON/COLOR DATA ////
                 //// these functions are called at 30 calls per sec    ////
@@ -319,6 +319,9 @@ namespace MultiKinectProcessor
 
                 }
 
+                */
+
+                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(SensorAllFramesReady);
 
  
             }
@@ -481,6 +484,142 @@ namespace MultiKinectProcessor
                 }
             }
         }
+
+
+
+        /// <summary>
+        /// Event handler for Kinect sensor's AllFramesReady event
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
+        {
+
+            Skeleton[] skeletons = new Skeleton[0];
+
+
+            // SP - Import Skeleton Data
+            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
+            {
+                if (skeletonFrame != null)
+                {
+                    skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
+                    skeletonFrame.CopySkeletonDataTo(skeletons);
+                }
+            }
+
+
+
+            // SP - Draw Single Kinect Skeleton View
+            using (DrawingContext dc = this.drawingGroup.Open())
+            {
+                // Draw a transparent background to set the render size
+                dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+                if (skeletons.Length != 0)
+                {
+                    foreach (Skeleton skel in skeletons)
+                    {
+                        //RenderClippedEdges(skel, dc);
+
+                        if (skel.TrackingState == SkeletonTrackingState.Tracked)
+                        {
+                            this.DrawBonesAndJoints(skel, dc);
+                        }
+                        else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
+                        {
+                            dc.DrawEllipse(
+                            this.centerPointBrush,
+                            null,
+                            this.SkeletonPointToScreen(skel.Position),
+                            BodyCenterThickness,
+                            BodyCenterThickness);
+                        }
+                    }
+                }
+
+                // prevent drawing outside of our render area
+                this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+            }
+
+
+            // SP - Draw Top View Scene View
+            using (DrawingContext dctv = this.drawingGroupTopView.Open())
+            {
+                // Draw a transparent background to set the render size
+                dctv.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+
+
+
+                if (skeletons.Length != 0)
+                {
+                    int tracked = 0;
+                    foreach (Skeleton skel in skeletons)
+                    {
+                        if (skel.TrackingState == SkeletonTrackingState.Tracked)
+                        {
+                            tracked++;
+                            if (tracked > 1)
+                            {
+                                // SP - Write error that only one skeleton can exist right now
+                                this.statusBarText.Foreground = errorMessage;
+                                this.statusBarText.Text = "During calibration, only 1 person may be in scene as the controller. " + skeletons.Length + " skeletons detected";
+
+                                break;
+                            }
+                        }
+
+                    }
+
+                    if (tracked == 1)
+                    {
+                        clockCounter++;
+
+                        // SP - Write Currently calibrating message
+                        this.statusBarText.Foreground = infoMessage;
+                        this.statusBarText.Text = "Calibration in Progress";
+
+                        dctv.DrawEllipse(this.centerPointBrush, null, new Point(RenderWidth / 2.0, RenderHeight / 2.0), 30, 30);
+
+                        Point kinectLocation = new Point();
+                        kinectLocation = KinectPointToScreen(KinectAll.kinectAll.kinectsList.First().GetDynamicDistance(), KinectAll.kinectAll.kinectsList.First().GetDynamicAngle());
+
+                        dctv.DrawEllipse(this.kinectPointBrush, null, kinectLocation, 20, 20);
+                        dctv.DrawLine(inferredBonePen, new Point(RenderWidth / 2.0, RenderHeight / 2.0), kinectLocation);
+                    }
+                    else
+                    {
+                        // SP - WriteStep into frame message
+                        this.statusBarText.Foreground = infoMessage;
+                        this.statusBarText.Text = "Please step into the Kinect Frame";
+                    }
+                }
+
+                // prevent drawing outside of our render area
+                this.drawingGroupTopView.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+            }
+
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            {
+                if (colorFrame != null /* && KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels() != null */)
+                {
+
+
+                    // Copy the pixel data from the image to a storage array
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+
+                    // Write the pixel data into our bitmap
+                    this.colorBitmap.WritePixels(
+                        new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
+                        KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels(),
+                        this.colorBitmap.PixelWidth * sizeof(int),
+                        0);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Draws a skeleton's bones and joints

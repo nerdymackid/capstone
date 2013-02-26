@@ -17,6 +17,7 @@ using System.IO;
 using Microsoft.Kinect;
 using System.Diagnostics;
 
+
 using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.FaceTracking;
 
@@ -34,9 +35,9 @@ namespace MultiKinectProcessor.SourceCode
         public KinectSensor kinectSensor;
 
         /// <summary>
-        /// Dependency Property that initiates a Property Change Callback (Event Handler) upon a KinectSensor Change
+        /// System Lock Object to lock the data copy operations
         /// </summary>
-        public DependencyProperty KinectSensorChangeProperty;
+        private Object dataCopyLock = new Object();
 
         /// <summary>
         /// Dynamic distance kinect is relative to user
@@ -223,12 +224,18 @@ namespace MultiKinectProcessor.SourceCode
         {
             try
             {
-                this.KinectSensorChangeProperty = DependencyProperty.Register(
-                "KinectSingle",
-                typeof(KinectSensor),
-                typeof(KinectSingle),
-                new PropertyMetadata(
-                    null, (o, args) => ((KinectSingle)o).OnSensorChanged((KinectSensor)args.OldValue, (KinectSensor)args.NewValue)));
+                Message.Info("Attempting to Start All Kinect Data Stream Handler");
+
+                //KinectSingle.kinectSensorChangeProperty = DependencyProperty.Register(
+                //    "KinectSingle",
+                //    typeof(KinectSensor),
+                //    typeof(KinectSingle),
+                //    new PropertyMetadata(
+                //        null, (o, args) => ((KinectSingle)o).OnSensorChanged((KinectSensor)args.OldValue, (KinectSensor)args.NewValue)));
+        
+                kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinect_AllFramesReady);
+
+
             }
             catch
             {
@@ -236,7 +243,9 @@ namespace MultiKinectProcessor.SourceCode
                 return false;
             }
 
-            Message.Info("Successfully started SensorChangeProperty");
+            Message.Info("Successfully started All Data Stream Changed Event Handler");
+
+            Message.Info("Allocating Memory for individual (skeleton, color, depth) streams");
 
             // Allocate Memory for Data Streams
             this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength];
@@ -244,24 +253,6 @@ namespace MultiKinectProcessor.SourceCode
             this.depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
 
             return true;
-        }
-
-        /// <summary>
-        /// Intermediate Function to manually update the data steam handler stack
-        /// </summary>
-        /// <param name="oldSensor"></param>
-        /// <param name="newSensor"></param>
-        private void OnSensorChanged(KinectSensor oldSensor, KinectSensor newSensor)
-        {
-            if (oldSensor != null)
-            {
-                oldSensor.AllFramesReady -= this.kinect_AllFramesReady;
-               //AS SP this.ResetFaceTracking();
-            }
-            if (newSensor != null)
-            {
-                newSensor.AllFramesReady += this.kinect_AllFramesReady;
-            }
         }
 
         
@@ -394,28 +385,49 @@ namespace MultiKinectProcessor.SourceCode
                     return;
                 }
 
-                //// SKELETON ////
-                //SP temp if (this.skeletonData != null) // check that a frame is available
+
+                lock (dataCopyLock)
                 {
-                    skeletonFrame.CopySkeletonDataTo(this.skeletonData); // get the skeletal information in this frame
+                    //// SKELETON ////
+                    if (skeletonFrame != null) // check that a frame is available
+                    {
+                        //Message.Info("Copying Skeleton Data");
+                        skeletonFrame.CopySkeletonDataTo(this.skeletonData); // get the skeletal information in this frame
+                    }
+
+                    //// COLOR IMAGE ////
+                    if (colorFrame != null)
+                    {
+                        // Copy the pixel data from the image to a storage array
+                        colorFrame.CopyPixelDataTo(this.colorPixels);
+                    }
+
+                    //// DEPTH IMAGE ////
+                    if (depthFrame != null)
+                    {
+                        // Copy the pixel data from the image to a storage array
+                        depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
+                    }
                 }
 
 
-                //// COLOR IMAGE ////
-                //SP temp if (this.colorPixels != null)
+                foreach (Skeleton skel in this.skeletonData)
                 {
-                    // Copy the pixel data from the image to a storage array
-                    colorFrame.CopyPixelDataTo(this.colorPixels);
+                    if (skel.TrackingState == SkeletonTrackingState.Tracked)
+                    {
+
+                        theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
+                        theta = Calculation.radians2Degrees(theta);
+                        distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
+
+                        Message.Info("Theta: " + theta);
+
+                        //TestStable();
 
 
+                    }
                 }
 
-                //// DEPTH IMAGE ////
-                //SP temp if (this.depthPixels != null)
-                {
-                    // Copy the pixel data from the image to a storage array
-                    depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
-                }
 
             }
         }

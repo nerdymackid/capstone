@@ -226,6 +226,7 @@ namespace MultiKinectProcessor.SourceCode
                 {
                     Message.Warning("Unable to Start Unified Data Streams on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
                 }
+
             }
         }
 

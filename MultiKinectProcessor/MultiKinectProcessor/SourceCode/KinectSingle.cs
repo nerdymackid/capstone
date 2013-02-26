@@ -106,7 +106,9 @@ namespace MultiKinectProcessor.SourceCode
         private FaceTrackFrame faceTrackFrame;
         private bool faceDetected;
         private byte[] colorPixels;
-        private DepthImagePixel[] depthPixels;
+        private short[] depthPixels;
+        Skeleton skeletonOfInterest;
+
 
 
 
@@ -250,7 +252,7 @@ namespace MultiKinectProcessor.SourceCode
             // Allocate Memory for Data Streams
             this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength];
             this.colorPixels = new byte[kinectSensor.ColorStream.FramePixelDataLength];
-            this.depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+            this.depthPixels = new short[kinectSensor.DepthStream.FramePixelDataLength];
 
             return true;
         }
@@ -368,6 +370,8 @@ namespace MultiKinectProcessor.SourceCode
 
         */
 
+          
+
         /// <summary>
         /// Handler for all frames Frames
         /// </summary>
@@ -406,7 +410,7 @@ namespace MultiKinectProcessor.SourceCode
                     if (depthFrame != null)
                     {
                         // Copy the pixel data from the image to a storage array
-                        depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
+                        depthFrame.CopyPixelDataTo(this.depthPixels);
                     }
                 }
 
@@ -415,7 +419,7 @@ namespace MultiKinectProcessor.SourceCode
                 {
                     if (skel.TrackingState == SkeletonTrackingState.Tracked)
                     {
-
+                        skeletonOfInterest = skel;
                         theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
                         theta = Calculation.radians2Degrees(theta);
                         distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
@@ -428,6 +432,26 @@ namespace MultiKinectProcessor.SourceCode
                     }
                 }
 
+                //// Face Detection - AS ///
+
+                if (faceTracker != null)
+                {
+                    faceTrackFrame = faceTracker.Track(this.kinectSensor.ColorStream.Format, this.colorPixels, this.kinectSensor.DepthStream.Format, this.depthPixels, skeletonOfInterest);
+                    faceDetected = faceTrackFrame.TrackSuccessful;
+                    Message.Info("FaceDetected: " + this.FaceDetected());
+                }
+                else
+                {
+                    try
+                    {
+                        faceTracker = new FaceTracker(this.kinectSensor);
+                        Message.Info("Frame processed");
+                    }
+                    catch (InvalidOperationException) { Message.Info("Frame not processed"); }
+
+                }
+                //// Face Detection - AS ///
+              
 
             }
         }
@@ -565,9 +589,20 @@ namespace MultiKinectProcessor.SourceCode
         {
             return colorPixels;
         }
-        public DepthImagePixel[] GetDepthPixels()
+        public short[] GetDepthPixels()
         {
             return depthPixels;
         }
+
+        /// AS
+        /// <summary>
+        /// Returns True if face is detected
+        /// </summary>
+        /// <returns></returns>
+        public bool FaceDetected()
+        {
+            return faceDetected;
+        }
+       
     }
 }

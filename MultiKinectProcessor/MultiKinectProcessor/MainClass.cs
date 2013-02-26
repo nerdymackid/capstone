@@ -62,7 +62,7 @@ namespace MultiKinectProcessor
             else
                 Message.Warning("No Kinects Found");
 
-
+           
 
             // SP - Run the mainClass instance and open the debugWindow
             MainClass.mainClass.Run(DebugWindow.debugWindow);

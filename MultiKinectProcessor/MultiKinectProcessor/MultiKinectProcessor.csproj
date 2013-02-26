@@ -35,6 +35,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Kinect, Version=1.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Kinect.Toolkit">
+      <HintPath>Toolkits\Microsoft.Kinect.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Kinect.Toolkit.FaceTracking">
+      <HintPath>Toolkits\Microsoft.Kinect.Toolkit.FaceTracking.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

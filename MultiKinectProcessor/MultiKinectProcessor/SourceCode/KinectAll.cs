@@ -74,11 +74,9 @@ namespace MultiKinectProcessor.SourceCode
 
 
         // SP/JP - Temporary function to just get one kinect pointer
-        public KinectSensor getFirstKinect()
+        public KinectSingle getFirstKinectSingle()
         {
-
-            return kinectsList.First().kinectSensor;
-
+            return kinectsList.First();
         }
 
 
@@ -167,7 +165,73 @@ namespace MultiKinectProcessor.SourceCode
 
         }
 
-        
+        /*
+         
+        /// <summary>
+        /// Start Skeleton Data Input Stream
+        /// </summary>
+        public void StartSkelStreamAll()
+        {
+                foreach (KinectSingle kinect in kinectsList)
+                {
+                    if (kinect.StartSkelStream() == false)
+                    {
+                        Message.Warning("Unable to Start Skeleton Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                    }
+                }
+        }
+
+        // AS
+        /// <summary>
+        /// Start Color Data Input Stream
+        /// </summary>
+        public void StartColorStreamAll()
+        {
+            foreach (KinectSingle kinect in kinectsList)
+            {
+                if (kinect.StartColorStream() == false)
+                {
+                    Message.Warning("Unable to Start Color Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                }
+            }
+        }
+
+        // AS
+        /// <summary>
+        /// Start Depth Data Input Stream
+        /// </summary>
+        public void StartDepthStreamAll()
+        {
+            foreach (KinectSingle kinect in kinectsList)
+            {
+                if (kinect.StartDepthStream() == false)
+                {
+                    Message.Warning("Unable to Start Depth Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                }
+            }
+        }
+
+        */
+
+
+        // AS
+        /// <summary>
+        /// Start ALL Data Input Stream
+        /// </summary>
+        public void StartUnifiedDataStreamAll()
+        {
+            foreach (KinectSingle kinect in kinectsList)
+            {
+                if (kinect.StartAllDataStreams() == false)
+                {
+                    Message.Warning("Unable to Start Unified Data Streams on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
+                }
+
+            }
+        }
+
+
+
         /// <summary>
         /// Calibrate all kinects connected
         /// </summary>

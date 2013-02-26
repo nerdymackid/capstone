@@ -21,11 +21,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Threading;
 using System.Globalization;
 using System.IO;
 using Microsoft.Kinect;
 using System.Diagnostics;
 using MultiKinectProcessor.SourceCode;
+
 
 namespace MultiKinectProcessor
 {
@@ -62,23 +65,15 @@ namespace MultiKinectProcessor
         /// </summary>
         static public void addtoDebugTextBox(String input)
         {
-            debugWindow.debugTextBox.AppendText(input + "\r") ;
+            // Using Dispatcher so it foesnt conflict with another thread
 
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+            {
+                debugWindow.debugTextBox.AppendText(input + "\r");
+            }));
+  
         }
-        static public void addtoDebugTextBox(String input, SolidColorBrush color)
-        {
 
-            debugWindow.debugTextBox.AppendText(input + "\r");
-
-            debugWindow.debugTextBox.Selection.Select(debugWindow.debugTextBox.Document.ContentEnd.GetLineStartPosition(0), debugWindow.debugTextBox.Document.ContentEnd);
-            // TBC debugWindow.debugTextBox.Selection.
-
-            // debugWindow.debugTextBox.AppendText("selection:" + debugWindow.debugTextBox.Selection.Text);
-
-
-
-
-        }
 
         /// <summary>
         /// Allows getting the contents of the debug text box
@@ -180,10 +175,9 @@ namespace MultiKinectProcessor
         /// </summary>
         private WriteableBitmap colorBitmap;
 
-        /// <summary>
-        /// Intermediate storage for the color data received from the camera
-        /// </summary>
         private byte[] colorPixels;
+        
+
 
         /// <summary>
         /// short designed to create a "clock" for user interface design
@@ -242,7 +236,7 @@ namespace MultiKinectProcessor
 
             if (KinectAll.kinectAll.getKinectCount() > 0)
             {
-                Message.Info("debugWindow connected to sensor " + KinectAll.kinectAll.getFirstKinect().UniqueKinectId);
+                Message.Info("debugWindow connected to sensor " + KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.UniqueKinectId);
 
 
 
@@ -281,17 +275,16 @@ namespace MultiKinectProcessor
                 //// SP - PREP COLOR STREAM DATA OUTPUT ////
                 ////////////////////////////////////////////
 
-                // Allocate space to put the pixels we'll receive
-                this.colorPixels = new byte[KinectAll.kinectAll.getFirstKinect().ColorStream.FramePixelDataLength];
-
+                this.colorPixels = new byte[KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FramePixelDataLength];
+               
                 // This is the bitmap we'll display on-screen
-                this.colorBitmap = new WriteableBitmap(KinectAll.kinectAll.getFirstKinect().ColorStream.FrameWidth, KinectAll.kinectAll.getFirstKinect().ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+                this.colorBitmap = new WriteableBitmap(KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameWidth, KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
 
                 // Set the image we display to point to the bitmap where we'll put the image data
                 // SP - Send data to the UI here
                 this.Video.Source = this.colorBitmap;
 
-
+                /*
                 ///////////////////////////////////////////////////////////
                 //// SP - CALL HANDLERS TO PROCESS SKELETON/COLOR DATA ////
                 //// these functions are called at 30 calls per sec    ////
@@ -299,16 +292,41 @@ namespace MultiKinectProcessor
 
                 // Add an event handler to be called whenever there is new skeleton frame data
                 // KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += this.SensorSkeletonFrameReady;
-                KinectAll.kinectAll.getFirstKinect().SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(SensorSkeletonFrameReady);
+                try
+                {
+                    KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(SensorSkeletonFrameReady);
+                    Message.Info("Skeleton Frame Handler in debugWindow started");
+
+                }
+                catch
+                {
+                    Message.Warning("Skeleton Frame Handler in debugWindow not started");
+
+                }
+
 
                 // Add an event handler to be called whenever there is new color frame data
                 // KinectAll.kinectAll.getFirstKinect().ColorFrameReady += this.SensorColorFrameReady;
-                KinectAll.kinectAll.getFirstKinect().ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(SensorColorFrameReady);
+                try
+                {
+                   KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(SensorColorFrameReady);
+                   Message.Info("Color Frame Handler in debugWindow started");
+
+                }
+                catch
+                {
+                    Message.Warning("Color Frame Handler in debugWindow not started");
+
+                }
+
+                */
+
+                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(SensorAllFramesReady);
 
  
             }
 
-            if (null == KinectAll.kinectAll.getFirstKinect())
+            if (null == KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
@@ -321,9 +339,9 @@ namespace MultiKinectProcessor
         /// <param name="e">event arguments</param>
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (null != KinectAll.kinectAll.getFirstKinect())
+            if (null != KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
             {
-                KinectAll.kinectAll.getFirstKinect().Stop();
+                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.Stop();
             }
         }
 
@@ -450,20 +468,158 @@ namespace MultiKinectProcessor
         {
             using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
             {
-                if (colorFrame != null)
+                if (colorFrame != null /* && KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels() != null */)
                 {
-                    // Copy the pixel data from the image to a temporary array
+
+
+                    // Copy the pixel data from the image to a storage array
                     colorFrame.CopyPixelDataTo(this.colorPixels);
 
                     // Write the pixel data into our bitmap
                     this.colorBitmap.WritePixels(
                         new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
-                        this.colorPixels,
+                        KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels(),
                         this.colorBitmap.PixelWidth * sizeof(int),
                         0);
                 }
             }
         }
+
+
+
+        /// <summary>
+        /// Event handler for Kinect sensor's AllFramesReady event
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
+        {
+
+            Skeleton[] skeletons = new Skeleton[0];
+
+
+            // SP - Import Skeleton Data
+            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
+            {
+                if (skeletonFrame != null)
+                {
+                    skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
+                    skeletonFrame.CopySkeletonDataTo(skeletons);
+                }
+            }
+
+
+
+            // SP - Draw Single Kinect Skeleton View
+            using (DrawingContext dc = this.drawingGroup.Open())
+            {
+                // Draw a transparent background to set the render size
+                dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+                if (skeletons.Length != 0)
+                {
+                    foreach (Skeleton skel in skeletons)
+                    {
+                        //RenderClippedEdges(skel, dc);
+
+                        if (skel.TrackingState == SkeletonTrackingState.Tracked)
+                        {
+                            this.DrawBonesAndJoints(skel, dc);
+                        }
+                        else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
+                        {
+                            dc.DrawEllipse(
+                            this.centerPointBrush,
+                            null,
+                            this.SkeletonPointToScreen(skel.Position),
+                            BodyCenterThickness,
+                            BodyCenterThickness);
+                        }
+                    }
+                }
+
+                // prevent drawing outside of our render area
+                this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+            }
+
+
+            // SP - Draw Top View Scene View
+            using (DrawingContext dctv = this.drawingGroupTopView.Open())
+            {
+                // Draw a transparent background to set the render size
+                dctv.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+
+
+
+                if (skeletons.Length != 0)
+                {
+                    int tracked = 0;
+                    foreach (Skeleton skel in skeletons)
+                    {
+                        if (skel.TrackingState == SkeletonTrackingState.Tracked)
+                        {
+                            tracked++;
+                            if (tracked > 1)
+                            {
+                                // SP - Write error that only one skeleton can exist right now
+                                this.statusBarText.Foreground = errorMessage;
+                                this.statusBarText.Text = "During calibration, only 1 person may be in scene as the controller. " + skeletons.Length + " skeletons detected";
+
+                                break;
+                            }
+                        }
+
+                    }
+
+                    if (tracked == 1)
+                    {
+                        clockCounter++;
+
+                        // SP - Write Currently calibrating message
+                        this.statusBarText.Foreground = infoMessage;
+                        this.statusBarText.Text = "Calibration in Progress";
+
+                        dctv.DrawEllipse(this.centerPointBrush, null, new Point(RenderWidth / 2.0, RenderHeight / 2.0), 30, 30);
+
+                        Point kinectLocation = new Point();
+                        kinectLocation = KinectPointToScreen(KinectAll.kinectAll.kinectsList.First().GetDynamicDistance(), KinectAll.kinectAll.kinectsList.First().GetDynamicAngle());
+
+                        dctv.DrawEllipse(this.kinectPointBrush, null, kinectLocation, 20, 20);
+                        dctv.DrawLine(inferredBonePen, new Point(RenderWidth / 2.0, RenderHeight / 2.0), kinectLocation);
+                    }
+                    else
+                    {
+                        // SP - WriteStep into frame message
+                        this.statusBarText.Foreground = infoMessage;
+                        this.statusBarText.Text = "Please step into the Kinect Frame";
+                    }
+                }
+
+                // prevent drawing outside of our render area
+                this.drawingGroupTopView.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+            }
+
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            {
+                if (colorFrame != null /* && KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels() != null */)
+                {
+
+
+                    // Copy the pixel data from the image to a storage array
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+
+                    // Write the pixel data into our bitmap
+                    this.colorBitmap.WritePixels(
+                        new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
+                        KinectAll.kinectAll.getFirstKinectSingle().GetColorPixels(),
+                        this.colorBitmap.PixelWidth * sizeof(int),
+                        0);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Draws a skeleton's bones and joints
@@ -549,7 +705,7 @@ namespace MultiKinectProcessor
         {
             // Convert point to depth space.  
             // We are not using depth directly, but we do want the points in our 640x480 output resolution.
-            DepthImagePoint depthPoint = KinectAll.kinectAll.getFirstKinect().CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
+            DepthImagePoint depthPoint = KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
         }
 
@@ -630,6 +786,11 @@ namespace MultiKinectProcessor
 
         }
 
+
+
+
+        //// UI EVENT HANDLERS ////
+
         /// <summary>
         /// Handles the checking or unchecking of the seated mode combo box
         /// </summary>
@@ -637,18 +798,27 @@ namespace MultiKinectProcessor
         /// <param name="e">event arguments</param>
         private void CheckBoxSeatedModeChanged(object sender, RoutedEventArgs e)
         {
-            if (null != KinectAll.kinectAll.getFirstKinect())
+            if (null != KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
             {
                 if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
                 {
-                    KinectAll.kinectAll.getFirstKinect().SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                    KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
                 }
                 else
                 {
-                    KinectAll.kinectAll.getFirstKinect().SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
+                    KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
                 }
             }
         }
 
+        private void BeginCalibration_Click(object sender, RoutedEventArgs e)
+        {
+            Message.Info("Begin Caibration Button Clicked");
+
+            //KinectAll.kinectAll.CalibrateAll();
+
+            //Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+            //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+        }
     }
 }

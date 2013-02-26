@@ -31,7 +31,7 @@ namespace MultiKinectProcessor.SourceCode
             }
             else
             {
-                Message.Error("Invalid TRIANGLE, CANNOT COMPUTE THETA");
+                Message.Error("Invalid TRIANGLE CANNOT COMPUTE THETA");
                 return -1;
             }
             return theta;

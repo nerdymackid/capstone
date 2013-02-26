@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -268,7 +269,7 @@ namespace MultiKinectProcessor.SourceCode
             {
                 Initialize();// initialize variables for calibration
 
-                Message.Info("Calibrate kinect with id: " + kinectSensor.UniqueKinectId);
+                Message.Info("Begin Calibrating kinect with id: " + kinectSensor.UniqueKinectId);
 
                 kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_Calibrate);
 
@@ -368,16 +369,24 @@ namespace MultiKinectProcessor.SourceCode
 
         */
 
+        private void CopySkeletonDataToClass()
+        {
+
+        }
+
+
         /// <summary>
         /// Handler for all frames Frames
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="allFramesReadyEventArgs"></param>
+
         private void kinect_AllFramesReady(object sender, AllFramesReadyEventArgs allFramesReadyEventArgs)
-        {
+        {            
+            
+            using (SkeletonFrame skeletonFrame = allFramesReadyEventArgs.OpenSkeletonFrame())
             using (ColorImageFrame colorFrame = allFramesReadyEventArgs.OpenColorImageFrame())
             using (DepthImageFrame depthFrame = allFramesReadyEventArgs.OpenDepthImageFrame())
-            using (SkeletonFrame skeletonFrame = allFramesReadyEventArgs.OpenSkeletonFrame())
             {
                 if (colorFrame == null || depthFrame == null || skeletonFrame == null)
                 {
@@ -385,20 +394,27 @@ namespace MultiKinectProcessor.SourceCode
                     return;
                 }
 
+                //Thread skeletonCopyThread = new Thread(() => skeletonFrame.CopySkeletonDataTo(this.skeletonData));
+                //Thread colorCopyThread = new Thread(() => colorFrame.CopyPixelDataTo(this.colorPixels));
+                //Thread depthCopyThread = new Thread(() => depthFrame.CopyDepthImagePixelDataTo(this.depthPixels));
+
+
 
                 lock (dataCopyLock)
                 {
                     //// SKELETON ////
-                    if (skeletonFrame != null) // check that a frame is available
+                    if (skeletonFrame != null)
                     {
-                        //Message.Info("Copying Skeleton Data");
-                        skeletonFrame.CopySkeletonDataTo(this.skeletonData); // get the skeletal information in this frame
+                        // Copy the skeleton data from the image to a storage array
+                        //skeletonCopyThread.Start();
+                        skeletonFrame.CopySkeletonDataTo(this.skeletonData);
                     }
 
                     //// COLOR IMAGE ////
                     if (colorFrame != null)
                     {
                         // Copy the pixel data from the image to a storage array
+                        //colorCopyThread.Start();
                         colorFrame.CopyPixelDataTo(this.colorPixels);
                     }
 
@@ -406,8 +422,15 @@ namespace MultiKinectProcessor.SourceCode
                     if (depthFrame != null)
                     {
                         // Copy the pixel data from the image to a storage array
+                        //depthCopyThread.Start();
                         depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
                     }
+
+                    //skeletonCopyThread.Join();
+                    //colorCopyThread.Join();
+                    //depthCopyThread.Join();
+
+
                 }
 
 

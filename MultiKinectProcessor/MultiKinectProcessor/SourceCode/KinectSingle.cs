@@ -80,6 +80,11 @@ namespace MultiKinectProcessor.SourceCode
         /// </summary>
         private int skeletonId;
 
+        /// <summary>
+        /// keeps a record of number of skeletons tracked per frame
+        /// </summary>
+        private int trackedSkeletons;
+
         //////////CALIBRATION STABILITY VARIABLES//////////
 
         /// <summary>
@@ -274,6 +279,7 @@ namespace MultiKinectProcessor.SourceCode
                 kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_Calibrate);
 
                 PositionStable(); //check position stability
+
             }
             else
             {
@@ -286,7 +292,7 @@ namespace MultiKinectProcessor.SourceCode
             return true;
         }
 
-        public void kinect_Calibrate(object sender, SkeletonFrameReadyEventArgs e)
+        private void kinect_Calibrate(object sender, SkeletonFrameReadyEventArgs e)
         {
             Message.Info("Calibration start...");
 
@@ -399,7 +405,9 @@ namespace MultiKinectProcessor.SourceCode
                 //Thread depthCopyThread = new Thread(() => depthFrame.CopyDepthImagePixelDataTo(this.depthPixels));
 
 
-
+                // SP
+                // Lock this stream of code to make sure nothing happens between/during the 3 copy operations
+                // Can thread each of these, but no significant performance gain
                 lock (dataCopyLock)
                 {
                     //// SKELETON ////
@@ -424,30 +432,30 @@ namespace MultiKinectProcessor.SourceCode
                         // Copy the pixel data from the image to a storage array
                         //depthCopyThread.Start();
                         depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
+                        
                     }
 
                     //skeletonCopyThread.Join();
                     //colorCopyThread.Join();
                     //depthCopyThread.Join();
-
-
                 }
 
+                // Reset Counter Variables
+                this.trackedSkeletons = 0;
 
                 foreach (Skeleton skel in this.skeletonData)
                 {
                     if (skel.TrackingState == SkeletonTrackingState.Tracked)
                     {
+                        this.trackedSkeletons++;
 
-                        theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
-                        theta = Calculation.radians2Degrees(theta);
+                        theta = Calculation.radians2Degrees(Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z));
+
                         distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
 
-                        Message.Info("Theta: " + theta);
+                        // Message.Info("Theta: " + theta);
 
                         //TestStable();
-
-
                     }
                 }
 

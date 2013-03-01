@@ -56,7 +56,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainClass.cs" />
+    <Compile Include="StartClass.cs" />
     <Compile Include="SourceCode\Calculation.cs" />
     <Compile Include="SourceCode\KinectAll.cs" />
     <Compile Include="SourceCode\KinectSingle.cs" />
@@ -88,6 +88,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram2.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="926573b0-02a6-4f96-a513-ca7aeb937bb2"
+  name="FaceTracking"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="2ef01419-ef7a-4b0e-afce-814ee1fdfb77"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DMicrosoft.Kinect.Toolkit.FaceTracking"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="a40a5c7e-819f-4c33-b5dc-5744e9fc3166"
+        name="FaceTracker"
+        visibility="Private"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="95faa42c-0709-45dd-820e-d2bc77d63968"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FUsers%2FSea Pong%2FDocuments%2FGitHub%2Fcapstone%2FMultiKinectProcessor%2FMultiKinectProcessor%2FToolkits%2FMicrosoft.Kinect.Toolkit.FaceTracking.dll&quot; Namespace%3DMicrosoft.Kinect.Toolkit.FaceTracking Type%3DFaceTracker"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="de606ba4-1009-4797-8f30-cc4370b0a3d5"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="3bf3c127-8edd-490d-8225-07959aeec800">
+                <propertyInstance
+                  Id="18df31d3-6333-4784-9265-55a7d88aad72"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="3feac808-8959-4750-a105-59edcb342820">
+                <propertyInstance
+                  Id="8e4b9e5b-63c8-4f6e-9a60-6fc11713608b"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="20988816-a3dd-49cd-9162-023d6c7f4efb">
+                <propertyInstance
+                  Id="403b33e2-7980-4943-8bf1-cb5d2267200b"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="2fbee260-972f-4a6f-932c-fdb182e3fb46">
+                <propertyInstance
+                  Id="a5ccd4ad-b185-48a4-866c-f3d8ce766ae6"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="830bf330-a980-4da9-9fd0-f8f61947e583">
+                <propertyInstance
+                  Id="0947a2e0-812d-49bc-84f1-b452c54d0bfe"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="16a51abe-95ac-47bf-80fc-cd9e77d8b95d"
+        name="FaceTrackFrame"
+        visibility="Private"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="14be09f6-48fd-409b-83b9-83ff75d4fa4c"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FUsers%2FSea Pong%2FDocuments%2FGitHub%2Fcapstone%2FMultiKinectProcessor%2FMultiKinectProcessor%2FToolkits%2FMicrosoft.Kinect.Toolkit.FaceTracking.dll&quot; Namespace%3DMicrosoft.Kinect.Toolkit.FaceTracking Type%3DFaceTrackFrame"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="d5b7ad85-3c51-47d1-b1e4-e3f4040a6a8c"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="25350ba7-c508-42b7-b4cc-7c154a3321ba">
+                <propertyInstance
+                  Id="e6104839-df7d-495f-b46b-339a7ef1dc28"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="c33c711c-b823-4218-bc78-2972b48df7f1">
+                <propertyInstance
+                  Id="22cd5144-9674-41e0-926a-34992115367c"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="7f5c5f2d-5bfb-45ee-81ea-398b0087afb6">
+                <propertyInstance
+                  Id="6ac0fa47-6301-4af3-ad79-838da0e20d7a"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="915f1a09-3db6-4c5e-9e73-f1f9bf7b1de7">
+                <propertyInstance
+                  Id="25315848-1fa5-41c4-82a7-436ef92d0f0e"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="cee2cc62-d267-4847-a253-57a0d897683a">
+                <propertyInstance
+                  Id="39f90dc8-832b-4e75-8898-e768f9229049"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

@@ -28,7 +28,7 @@ namespace MultiKinectProcessor.SourceCode
     /// Description: Contains code for controlling a single Kinect
     /// Author: Jerry Peng
     /// </summary>
-    public class KinectSingle : UserControl
+    public class KinectSingle
     {
         /// <summary>
         /// kinect sensor pointer
@@ -104,15 +104,17 @@ namespace MultiKinectProcessor.SourceCode
         private int stabilityDistanceCount;
         private int stabilityThetaCount;
         private int stabilityHeightCount;
+        private int stabilityFaceTrackingCount;
         private double stabilityTheta;
         private double stabilityDistance;
         private double stabilityHeight;
+        private bool stabilityFaceTracking;
         
 
         //////////CALIBRATION STATIC VARIABLES//////////
         readonly private double STABILITY_LEVEL = 100;
         readonly private double DISTANCE_BUFFER = 0.01;
-        readonly private double HEIGHT_BUFFER = 0.01;
+        readonly private double HEIGHT_BUFFER = 0.1;
         readonly private double ANGLE_BUFFER = 1;
 
         /// <summary>
@@ -121,6 +123,7 @@ namespace MultiKinectProcessor.SourceCode
         private FaceTracker faceTracker;
         private FaceTrackFrame faceTrackFrame;
         private bool faceDetected;
+        private bool faceTrackingStatic;
         private byte[] colorPixels;
         private short[] depthPixels;
         Skeleton skeletonOfInterest;
@@ -150,13 +153,15 @@ namespace MultiKinectProcessor.SourceCode
             stabilityDistanceCount = 0;
             stabilityThetaCount = 0;
             stabilityHeightCount = 0;
+            stabilityFaceTrackingCount = 0;
             stabilityDistance = 0;
             stabilityTheta = 0;
             stabilityHeight = 0;
+            stabilityFaceTracking = false;
             calibrationCheck = false;
             calibrateBlock = new Semaphore(0, 1);
-            Message.Info("stabilityThetaCount_after initialization: " + stabilityThetaCount);
-            Message.Info("stabilityDistanceCount_after initialization: " + stabilityDistanceCount);
+            //Message.Info("stabilityThetaCount_after initialization: " + stabilityThetaCount);
+            //Message.Info("stabilityDistanceCount_after initialization: " + stabilityDistanceCount);
 
         }
         /// <summary>
@@ -253,6 +258,9 @@ namespace MultiKinectProcessor.SourceCode
                 // kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
 
                 Message.Info("Calibration success!");
+                Message.Info("Static Distance: " + distanceStatic.ToString());
+                Message.Info("Static Theta: " + thetaStatic.ToString());
+                
                 calibrationCheck = false; //end of calibration sequence
                 return true;
             }
@@ -260,23 +268,6 @@ namespace MultiKinectProcessor.SourceCode
             {
                 Message.Error("Already Calibrating");
                 return false;
-
-            }
-        
-
-            foreach (Skeleton skel in this.skeletonData)
-            {
-                if (skel.TrackingState == SkeletonTrackingState.Tracked)
-                {
-
-                    theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
-                    theta = Calculation.radians2Degrees(theta);
-                    distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
-                   
-                    //TestStable();
-                 
-
-                }
 
             }
         }
@@ -321,11 +312,11 @@ namespace MultiKinectProcessor.SourceCode
         }
 
         
-
-        private void CopySkeletonDataToClass()
-        {
-
-        }
+/// <summary>
+/// Thread that calibrates kinect
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
 
         private void kinect_Calibrate(object sender, SkeletonFrameReadyEventArgs e)
         {
@@ -409,6 +400,7 @@ namespace MultiKinectProcessor.SourceCode
 
                         distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
 
+                        height = skel.Position.Y;
                         // Message.Info("Theta: " + theta);
 
                         //TestStable();
@@ -457,8 +449,10 @@ namespace MultiKinectProcessor.SourceCode
         }
         private void TestStable()
         {
-            //Message.Info("stabilityThetaCount: " + stabilityThetaCount);
-            //Message.Info("stabilityDistanceCount: " + stabilityDistanceCount);
+            Message.Info("stabilityThetaCount: " + stabilityThetaCount);
+            Message.Info("stabilityDistanceCount: " + stabilityDistanceCount);
+            Message.Info("stabilityHeightCount: " + stabilityHeightCount);
+            Message.Info("stabilityFaceTracking: " + stabilityFaceTrackingCount);
             //Message.Info("Theta: " + theta);
             //Message.Info("Distance: " + distance);
            
@@ -469,8 +463,10 @@ namespace MultiKinectProcessor.SourceCode
                 //Message.Info("Theta: " + theta);
                 //Message.Info("Distance: " + distance);
             }
+            /////////////////////////State machine//////////////////////////////
             else
             {
+                //Angle
                 if (stabilityTheta < (theta + ANGLE_BUFFER) && stabilityTheta > (theta - ANGLE_BUFFER))
                 {
                     stabilityThetaCount++;
@@ -479,6 +475,7 @@ namespace MultiKinectProcessor.SourceCode
                 {
                     stabilityThetaCount = 0;
                 }
+                //Distance
                 if (stabilityDistance < (distance + DISTANCE_BUFFER) && stabilityDistance > (distance - DISTANCE_BUFFER))
                 {
                     stabilityDistanceCount++;
@@ -487,18 +484,41 @@ namespace MultiKinectProcessor.SourceCode
                 {
                     stabilityDistanceCount = 0;
                 }
-
-                if (stabilityDistanceCount > STABILITY_LEVEL && stabilityThetaCount > STABILITY_LEVEL)
+                //Height
+                if (stabilityHeight < (height + HEIGHT_BUFFER) && stabilityHeight > (height - HEIGHT_BUFFER))
+                {
+                    stabilityHeightCount++;
+                }
+                else
+                {
+                    stabilityHeightCount = 0;
+                }
+                //faceTracking
+                if (stabilityFaceTracking == faceDetected)
+                {
+                    stabilityFaceTrackingCount++;
+                }
+                else
+                {
+                    stabilityFaceTrackingCount = 0;
+                }
+                //////////////////////////////check/////////////////////////////////
+                if (stabilityDistanceCount > STABILITY_LEVEL && stabilityThetaCount > STABILITY_LEVEL && stabilityHeightCount > STABILITY_LEVEL)
                 {
                     
-                    calibrateBlock.Release();
+                    
                     distanceStatic = stabilityDistance;
                     thetaStatic = stabilityTheta;
+                    heightStatic = stabilityHeight;
+                    faceTrackingStatic = stabilityFaceTracking;
+                    calibrateBlock.Release();
                 }
                 else
                 {
                     stabilityDistance = distance;
                     stabilityTheta = theta;
+                    stabilityHeight = height;
+                    stabilityFaceTracking = faceDetected;
                 }
             }
         }

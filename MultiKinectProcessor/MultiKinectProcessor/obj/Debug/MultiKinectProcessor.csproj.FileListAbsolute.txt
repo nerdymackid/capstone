@@ -30,7 +30,6 @@ C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcess
 C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\MultiKinectProcessor.pdb
 C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\Microsoft.Kinect.Toolkit.dll
 C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Debug\Microsoft.Kinect.Toolkit.FaceTracking.dll
-C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csprojResolveAssemblyReference.cache
 C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\DebugWindow.baml
 C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\DebugWindow.g.cs
 C:\Users\Jerry\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor_MarkupCompile.cache

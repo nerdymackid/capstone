@@ -74,6 +74,7 @@ namespace MultiKinectProcessor
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
                 debugWindow.debugTextBox.AppendText(input + "\r");
+                debugWindow.debugTextBox.ScrollToEnd();
             }));
   
         }

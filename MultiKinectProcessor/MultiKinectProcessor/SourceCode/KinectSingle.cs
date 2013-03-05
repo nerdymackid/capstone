@@ -421,7 +421,7 @@ namespace MultiKinectProcessor.SourceCode
                 {
                     faceTrackFrame = faceTracker.Track(this.kinectSensor.ColorStream.Format, this.colorPixels, this.kinectSensor.DepthStream.Format, this.depthPixels, skeletonOfInterest);
                     faceDetected = faceTrackFrame.TrackSuccessful;
-                    Message.Info("FaceDetected: " + this.FaceDetected());
+                    //Message.Info("FaceDetected: " + this.FaceDetected());
                 }
                 else
                 {

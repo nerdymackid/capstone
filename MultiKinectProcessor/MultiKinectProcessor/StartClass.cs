@@ -25,7 +25,7 @@ namespace MultiKinectProcessor
     /// NOTE: SP - A Singleton pattern is used here to avoid static issues, since there will ever only be one instance of MinClass instantiated at any given time. 
     /// Modified by: Sea Pong
     /// </summary>
-    public partial class MainClass : System.Windows.Application
+    public partial class StartClass : System.Windows.Application
     {
 
 
@@ -65,7 +65,7 @@ namespace MultiKinectProcessor
 
 
             // SP - Run the mainClass instance and open the debugWindow
-            MainClass.mainClass.Run(DebugWindow.debugWindow);
+            StartClass.mainClass.Run(DebugWindow.debugWindow);
             
 
 
@@ -93,21 +93,21 @@ namespace MultiKinectProcessor
         /// <summary>
         /// Creates an internal private instance of this class
         /// </summary>
-        private static MainClass mainClassPrivateInstance = new MainClass();
+        private static StartClass mainClassPrivateInstance = new StartClass();
 
 
         /// <summary>
         /// Use this public getter as a way to access the privately initialized KinectAll instance (KinectAll.kinectAll.keepgoin)
         /// </summary>
-        public static MainClass mainClass
+        public static StartClass mainClass
         {
             get { return mainClassPrivateInstance; }
         }
 
         /// <summary>
-        /// Sorry, the MainClass constructor is Private and an Instance of this Class is already created at startup, we should only ever have one instance of this class. Use the static getter method to use this inital instance.
+        /// Sorry, the StartClass constructor is Private and an Instance of this Class is already created at startup, we should only ever have one instance of this class. Use the static getter method to use this inital instance.
         /// </summary>
-        private MainClass()
+        private StartClass()
         {
            
         }

@@ -1,0 +1,431 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="36f54062-bd8d-4543-a28c-8c83b6f9668d"
+  name="Controls"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="07a43b0b-fbd0-4c65-adf6-cc21a18075cc"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DSystem.Windows.Controls"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="57044c0a-c57c-4a6b-b79d-2ce892b57531"
+        name="UserControl"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="d6f9ec45-9492-4c50-aad8-ebe290c59fbd"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2FPresentationFramework.dll&quot; Namespace%3DSystem.Windows.Controls Type%3DUserControl"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="aafba112-0894-4bf1-a51e-4400d84c765a"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="8c478b24-fa25-471b-84bf-ae1eb784d4ef">
+                <propertyInstance
+                  Id="ef7aa988-6501-4394-b05b-44d3e4e91d60"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="9c9602a5-c8d6-4ad8-bf3e-bcf10b2612d3">
+                <propertyInstance
+                  Id="2cc07b7c-9b71-4fc9-8762-40e7eea2ad9f"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="98668b51-e9f0-4987-8902-257f5e1f60e1">
+                <propertyInstance
+                  Id="be303c30-8255-450d-a0e7-1108d196cb7a"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="87dabf79-e09e-4f02-9347-58c3ba00e45c">
+                <propertyInstance
+                  Id="b65af048-246f-48af-b3e7-b21f496ebc92"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="3e8cfac4-ffc7-482b-85c0-fe636be5d8d7">
+                <propertyInstance
+                  Id="39200b99-8fc4-4c10-9f37-04497a91ab68"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="b95ce39f-47a5-4169-9e88-e8f35eefa1b8"
+        name="Grid"
+        visibility="Private"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="bc2faece-0da1-409b-a4eb-50cf2a809198"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2FPresentationFramework.dll&quot; Namespace%3DSystem.Windows.Controls Type%3DGrid"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="b328ed9c-35fd-4ed2-8067-296334039d8e"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="3ed62cec-e496-4210-a2ce-17922f9d8024">
+                <propertyInstance
+                  Id="98c7463e-24a8-492c-b34d-a34554bdcff6"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="263ca5c9-1f02-4829-a031-4af6278947d2">
+                <propertyInstance
+                  Id="f1e62eb3-5b5e-4dd6-87ba-017ffb6f60df"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="618250c4-698d-4383-984c-07bd341bcee2">
+                <propertyInstance
+                  Id="29cc6513-173a-4bda-aad4-1f5378b41b4e"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="c68384dd-9cc0-4729-ad42-112859474995">
+                <propertyInstance
+                  Id="8198279b-bbe2-488a-bf69-87a8a6fccf82"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="b70bd98b-1600-4af9-9f49-9ad601dfd5f3">
+                <propertyInstance
+                  Id="3be8a64a-e584-4ff8-b10c-5e7e92842e5e"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="2fc9a909-0ae6-4340-b47c-5ae790cba164"
+        name="Image"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="e248f957-2af8-4a11-bd81-097b360d5289"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2FPresentationFramework.dll&quot; Namespace%3DSystem.Windows.Controls Type%3DImage"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="3708607f-7579-4698-988e-4e695e81e671"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="0efa532b-27b0-42a9-90f2-41114b61d4b8">
+                <propertyInstance
+                  Id="f27a70aa-7004-4fb1-aab7-2a624aa935cf"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="bcdf4070-9c36-43fd-be48-d454dad3e501">
+                <propertyInstance
+                  Id="21873b4f-4303-4795-bfef-143583ee2b28"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="34591a1e-1f2b-42b5-8572-4bbd21acb150">
+                <propertyInstance
+                  Id="bae70bb3-3227-41ab-9ec9-b1a519756a22"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="66cbff32-173c-438a-bf5a-60d4d759f666">
+                <propertyInstance
+                  Id="c34c1532-78e5-4171-9be3-3b6da31a9852"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="25e80623-d912-4984-bf67-839912597daa">
+                <propertyInstance
+                  Id="5689ec22-077a-4413-9c5f-edc235618331"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="52de4f7c-e7aa-41a8-9277-4f0a459aa2f6"
+        name="RichTextBox"
+        visibility="Private"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="b477fb54-6237-4321-ac81-b6aeaf1d6518"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2FPresentationFramework.dll&quot; Namespace%3DSystem.Windows.Controls Type%3DRichTextBox"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="81e5349d-56c8-4630-a224-32d0ef42befb"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="2719b8e5-b0c0-45d8-8036-94ab5c1a762f">
+                <propertyInstance
+                  Id="8d5165d4-163d-4638-a6a1-6a79118667fb"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="ad752729-62ad-4dc6-aecf-6ca497890b8c">
+                <propertyInstance
+                  Id="3fa26432-6f1a-402f-b3eb-07c4efee9347"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="eecc377d-99be-40b1-868c-481f4fec28ba">
+                <propertyInstance
+                  Id="3401874c-2b5a-4de2-b255-7f506c4fa73d"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="661b09a2-0534-4c89-8531-9ca26587eda6">
+                <propertyInstance
+                  Id="33c9fa84-11de-467c-828c-7b0e96ad42a4"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="91530c55-c771-4683-8632-1284de562bab">
+                <propertyInstance
+                  Id="30982c21-a421-47d9-9661-97ee35c70837"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="b825b8b4-e726-4f3c-b5ba-b0071baf3f1f"
+        name="CheckBox"
+        visibility="Private"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="0c8280d3-20ef-4f38-9940-ac362a0f7337"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2FPresentationFramework.dll&quot; Namespace%3DSystem.Windows.Controls Type%3DCheckBox"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="cfc11ceb-ffd4-4371-8111-2bc074cb23dd"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="288afaec-832c-435b-810d-308bf2eb2f1c">
+                <propertyInstance
+                  Id="4c6d3b8c-d62a-4e24-97f7-a4c466a9599c"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="7b03a4f8-cef7-466a-b21b-0037a696fd3a">
+                <propertyInstance
+                  Id="bac109c8-18c2-499b-ac72-f158f1144afc"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="6099fc5c-7854-4458-97b5-a655c7c4d035">
+                <propertyInstance
+                  Id="149f9f32-8a86-4a13-9b4c-fa5a67c50a33"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="a9a8a1cb-e683-4f54-8e13-91ff53f331e3">
+                <propertyInstance
+                  Id="7c2dc9c3-6fe8-4297-9e62-06e88f3e3422"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="b8adb548-c21e-4fca-837b-a73010304885">
+                <propertyInstance
+                  Id="29353c56-fb8e-434b-8442-5d3ea99e11b0"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="22dd6767-0cd3-4e4d-a0ea-a7ada856fec8"
+        LastKnownName="Primitives"
+        LastKnownLocation="Package11_0054.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="b36af865-c187-43a4-ad2c-5a642fc52890"
+        name="TextBlock"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="a9c1364e-a7e6-493b-8cca-05973c94f025"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2FPresentationFramework.dll&quot; Namespace%3DSystem.Windows.Controls Type%3DTextBlock"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="78123830-08b4-4c95-9fef-c30f73636d1d"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="3a703168-e632-4302-a31d-dc94b2ddaec4">
+                <propertyInstance
+                  Id="d891e9b9-8876-46f3-8125-377a6abdcff2"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="8257aaac-df23-473b-b20c-7fb9e1d0bead">
+                <propertyInstance
+                  Id="105c2475-4745-4173-88b0-84d46c5489c3"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="f06d6783-9e3f-4d3e-b276-02d9b5127788">
+                <propertyInstance
+                  Id="ec972266-281b-4dc1-a863-1846c155028a"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="2b4aca76-b12a-4d49-a99c-e56fb40c4238">
+                <propertyInstance
+                  Id="6171cf99-667b-4a87-8f34-c63d9c8e9786"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="84988f8a-80a7-49e2-bda3-3bdd318ec609">
+                <propertyInstance
+                  Id="0b3b51f2-8f12-4764-81de-45f4f7f45586"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="14dbea7a-51ff-43db-a731-396ad157c6a6"
+        name="Button"
+        visibility="Private"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="95421d01-3a67-4f11-a792-c6ea3688ebbe"
+            handle="viewcode://./CodeSchema_Class?Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2FPresentationFramework.dll&quot; Namespace%3DSystem.Windows.Controls Type%3DButton"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="0258901d-cf4f-4173-bb48-a2cc891db4fa"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="5acfae3a-6d53-418b-acf5-e399c2de7def">
+                <propertyInstance
+                  Id="12f5690b-7d99-49b6-a38d-88a300179241"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="1d1cb6b1-3884-4e9c-baa8-f362edd11996">
+                <propertyInstance
+                  Id="f9fab392-5a1f-46d1-b6d4-adcf2cac19fd"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="62acecdd-9684-419e-a359-a9e136baed08">
+                <propertyInstance
+                  Id="ac237a11-8447-4a5a-b44b-0ec59ffc519f"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="05a254ea-fd5f-40c7-93ea-1f75ab3cd6ad">
+                <propertyInstance
+                  Id="b54d5d94-9b09-4a28-9689-16ae88b3c379"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="7830d501-edf7-4e67-b84a-6c30753bf4dd">
+                <propertyInstance
+                  Id="0c0c9091-6952-4391-b823-9908629e8dbd"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

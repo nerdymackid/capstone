@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="b825300f-d158-4499-b103-80a3284c4b19"
+  name="Wrapper Module" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <packagedElements>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="1dd0a66a-98c2-4c69-911f-bfbcda18dca2"
+        LastKnownName="KinectSDK (backend)"
+        LastKnownLocation="Package_0331.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="a797d700-0320-4504-92a6-3c5982163253"
+        name="WrapperClass"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="4b40e976-c562-43ed-b9ea-0ba8f5393d3d">
+            <classMoniker
+              Id="6782d0fc-dba5-4f24-a3c8-c45c757ef43c"
+              LastKnownName="Message"
+              LastKnownLocation="Package_0331.uml" />
+          </dependency>
+        </suppliersInternal>
+        <targetEnds>
+          <association
+            Id="1d6a22ad-888b-4c80-82df-c1a593ed7a64"
+            isDerived="false"
+            sourceEndRoleName="WrapperClass"
+            targetEndRoleName="DebugWindow"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="edba4338-ca08-4c70-a4d8-f9ad7bc5cc38"
+              LastKnownName="DebugWindow"
+              LastKnownLocation="Package_0331.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="5fc584a4-27c2-4d87-b849-d40f35d9cccf"
+                  name="WrapperClass"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c14c78b8-9eec-4704-a9a0-5c0a19a714b7"
+                  name="DebugWindow"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="32e63ea3-d067-4506-b011-c7d03a549e4a"
+            isDerived="false"
+            sourceEndRoleName="WrapperClass"
+            targetEndRoleName="KinectAll"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="c8633f3f-6d26-4df4-a75c-40a16aceeb8c"
+              LastKnownName="KinectAll"
+              LastKnownLocation="Package_0331.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="7d76f979-cf81-4d42-a385-e6c19917cf69"
+                  name="WrapperClass"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="13454db4-4c43-4472-a3a0-c6ae9dc3d14e"
+                  name="KinectAll"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="2e79813e-e0fd-4ebc-8314-b6204814ce1c"
+            isDerived="false"
+            sourceEndRoleName=""
+            targetEndRoleName=""
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="a797d700-0320-4504-92a6-3c5982163253"
+              LastKnownName="WrapperClass"
+              LastKnownLocation="Package1_0331.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="27d9b11d-8c29-4fd3-8765-d46c03187e96"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="da8dfbe0-b83e-46f3-9400-6b38dea14132"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

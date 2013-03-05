@@ -465,16 +465,10 @@ namespace MultiKinectProcessor
                 this.drawingGroupTopView.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
 
 
-                // print face detection result
-                if (KinectAll.kinectAll.getFirstKinectSingle().FaceDetected())
-                {
-                    this.faceDetectionStatusText.Text = "DETECTED";
-                }
-                else
-                {
-                    this.faceDetectionStatusText.Text = "NOT DETECTED";
-                }
+
             }
+
+
         }
 
         /// <summary>
@@ -636,6 +630,21 @@ namespace MultiKinectProcessor
                         0);
                 }
             }
+
+            // print face detection result
+            if (KinectAll.kinectAll.getFirstKinectSingle().FaceDetected())
+            {
+                this.statusBarText.Foreground = infoMessage;
+
+                this.faceDetectionStatusText.Text = "DETECTED";
+            }
+            else
+            {
+                this.statusBarText.Foreground = infoMessage;
+
+                this.faceDetectionStatusText.Text = "NOT DETECTED";
+            }
+
         }
 
 

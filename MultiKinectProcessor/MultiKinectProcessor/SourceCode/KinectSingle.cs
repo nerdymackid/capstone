@@ -262,7 +262,7 @@ namespace MultiKinectProcessor.SourceCode
                 return false;
 
             }
-        }
+        
 
             foreach (Skeleton skel in this.skeletonData)
             {
@@ -314,13 +314,13 @@ namespace MultiKinectProcessor.SourceCode
                 if (depthFrame != null)
                 {
                     // Copy the pixel data from the image to a storage array
-                    depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
+                    depthFrame.CopyPixelDataTo(this.depthPixels);
                 }
             }
 
         }
 
-        */
+        
 
         private void CopySkeletonDataToClass()
         {

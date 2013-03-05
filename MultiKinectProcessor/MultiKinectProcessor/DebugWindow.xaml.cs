@@ -37,12 +37,17 @@ namespace MultiKinectProcessor
     /// NOTE: SP - A Singleton pattern is used here to avoid static fucntion issues, since there will ever only be one instance of DebugWindow instantiated at any given time. 
     /// Original Author: Sea Pong
     /// </summary>
+    /// 
+
     public partial class DebugWindow : Window
     {
         /// <summary>
         /// Creates an internal private instance of this class
         /// </summary>
         private static DebugWindow debugWindowPrivateInstance = new DebugWindow();
+
+        private Thread calibrateThread = new Thread(new ThreadStart(KinectAll.kinectAll.CalibrateAll));
+        
 
         /// <summary>
         /// Sets a public static getter that gets the internal private instance
@@ -57,7 +62,9 @@ namespace MultiKinectProcessor
         /// </summary>
         private DebugWindow()
         {
+            calibrateThread.Name = "Calibration Thread";
             InitializeComponent();
+            
         }
 
         /// <summary>
@@ -813,12 +820,29 @@ namespace MultiKinectProcessor
 
         private void BeginCalibration_Click(object sender, RoutedEventArgs e)
         {
-            Message.Info("Begin Caibration Button Clicked");
+            
+            if (calibrateThread.IsAlive == false)
+            {
 
-            //KinectAll.kinectAll.CalibrateAll();
+                Message.Info("Begin Caibration Button Clicked");
 
-            //Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
-            //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+                if (calibrateThread != null)
+                {
+                    calibrateThread = new Thread(new ThreadStart(KinectAll.kinectAll.CalibrateAll));
+                    calibrateThread.Name = "Calibration Thread";
+                }
+                calibrateThread.Start();
+                //KinectAll.kinectAll.CalibrateAll();
+
+                //Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+                //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+            }
+            else
+            {
+                MessageBox.Show("Calibration already in progress");
+                Message.Error("Calibration already in progress");
+
+            }
         }
     }
 }

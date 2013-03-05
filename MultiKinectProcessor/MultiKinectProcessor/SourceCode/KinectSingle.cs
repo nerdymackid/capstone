@@ -40,6 +40,8 @@ namespace MultiKinectProcessor.SourceCode
         /// </summary>
         private Object dataCopyLock = new Object();
 
+        private Object CalibrateLock = new Object();
+
         /// <summary>
         /// Dynamic distance kinect is relative to user
         /// </summary>
@@ -80,25 +82,32 @@ namespace MultiKinectProcessor.SourceCode
         /// </summary>
         private int skeletonId;
 
+        /// <summary>
+        /// Semaphore used for calibration
+        /// </summary>
+        private static Semaphore calibrateBlock;
         //////////CALIBRATION STABILITY VARIABLES//////////
 
         /// <summary>
         /// variables for calibration stability
         /// </summary>
         private bool calibrationCheck;
+        private int m_stabilityDistanceCount;
+        private int m_stabilityThetaCount;
+        private int m_stabilityHeightCount;
         private int stabilityDistanceCount;
         private int stabilityThetaCount;
         private int stabilityHeightCount;
         private double stabilityTheta;
         private double stabilityDistance;
         private double stabilityHeight;
-        private bool stableCheck;
+        
 
         //////////CALIBRATION STATIC VARIABLES//////////
         readonly private double STABILITY_LEVEL = 100;
-        readonly private double DISTANCE_BUFFER = 0.1;
-        readonly private double HEIGHT_BUFFER = 0.1;
-        readonly private double ANGLE_BUFFER = 5;
+        readonly private double DISTANCE_BUFFER = 0.01;
+        readonly private double HEIGHT_BUFFER = 0.01;
+        readonly private double ANGLE_BUFFER = 1;
 
         /// <summary>
         /// Supports Facetracking
@@ -130,14 +139,18 @@ namespace MultiKinectProcessor.SourceCode
         /// </summary>
         private void Initialize()
         {
+            Debug.WriteLine("initializing calibration variables");
             stabilityDistanceCount = 0;
             stabilityThetaCount = 0;
             stabilityHeightCount = 0;
             stabilityDistance = 0;
             stabilityTheta = 0;
             stabilityHeight = 0;
-            stableCheck = false;
             calibrationCheck = false;
+            calibrateBlock = new Semaphore(0, 1);
+            Debug.WriteLine("stabilityThetaCount_after initialization: " + stabilityThetaCount);
+            Debug.WriteLine("stabilityDistanceCount_after initialization: " + stabilityDistanceCount);
+
         }
         /// <summary>
         /// Enables Kinect Sensors
@@ -166,56 +179,6 @@ namespace MultiKinectProcessor.SourceCode
         }
 
 
-        /*
-         
-        /// <summary>
-        /// Starts KinectSingle Skeleton Stream
-        /// </summary>
-        /// <returns>bool</returns>
-        public bool StartSkelStream()
-        {
-            
-            this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
-
-            kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
-
-            return true;
-
-        }
-
-        // AS
-        /// <summary>
-        /// Starts KinectSingle Color Stream
-        /// </summary>
-        /// <returns>bool</returns>
-        public bool StartColorStream()
-        {
-            // Allocate space to put the pixels we'll receive
-            this.colorPixels = new byte[kinectSensor.ColorStream.FramePixelDataLength];
-
-            kinectSensor.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(kinect_ColorFrameReady);
-
-            return true;
-
-        }
-
-        // AS
-        /// <summary>
-        /// Starts KinectSingle Depth Stream
-        /// </summary>
-        /// <returns>bool</returns>
-        public bool StartDepthStream()
-        {
-
-            this.depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
-
-            kinectSensor.DepthFrameReady += new EventHandler<DepthImageFrameReadyEventArgs>(kinect_DepthFrameReady);
-
-            return true;
-
-        }
-
-        */
 
         /// <summary>
         /// Starts KinectSingle Skeleton, Color, and Depth Streams
@@ -265,114 +228,50 @@ namespace MultiKinectProcessor.SourceCode
         ///<Author: Jerry Peng>
         public bool CalibrateKinect()
         {
-            if (calibrationCheck == true)
+            if (calibrationCheck == false)
             {
                 Initialize();// initialize variables for calibration
+
+                calibrationCheck = true; //indicate start of calibration sequence
 
                 Message.Info("Begin Calibrating kinect with id: " + kinectSensor.UniqueKinectId);
 
                 kinectSensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_Calibrate);
+                // kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinect_Calibrate);
+                //kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinect_AllFramesReady);
 
                 PositionStable(); //check position stability
+
+
+                kinectSensor.SkeletonFrameReady -= new EventHandler<SkeletonFrameReadyEventArgs>(kinect_Calibrate);
+
+                // kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
+
+                Debug.WriteLine("Calibration success!");
+                calibrationCheck = false; //end of calibration sequence
+                return true;
             }
             else
             {
-                Message.Error("Calibration check boolean not set to true");
+                Message.Error("Already Calibrating");
+                return false;
 
             }
-
-            // kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
-
-            return true;
         }
 
-        public void kinect_Calibrate(object sender, SkeletonFrameReadyEventArgs e)
+        private void kinect_Calibrate(object sender, SkeletonFrameReadyEventArgs e)
         {
-            Message.Info("Calibration start...");
-
-        }
-
-        /*
-        ///<Function: kinect_SkeletonFrameReady>
-        ///<Description: skeleton frame stream event handler>
-        ///<Complexity: O(n)>
-        ///<Author: Jerry Peng>
-        public void kinect_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
-        {
-            //Debug.WriteLine("In kinect skeleton event handler");
-
-
-            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame()) // Open the Skeleton frame
-            {
-                if (skeletonFrame != null && this.skeletonData != null) // check that a frame is available
-                {
-                    skeletonFrame.CopySkeletonDataTo(this.skeletonData); // get the skeletal information in this frame
-                }
-            }
-            // Debug.WriteLine(this.skeletonData.Length);
-
             foreach (Skeleton skel in this.skeletonData)
             {
                 if (skel.TrackingState == SkeletonTrackingState.Tracked)
                 {
-
-                    theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
-                    theta = Calculation.radians2Degrees(theta);
-                    distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
-                   
-                    //TestStable();
-                 
-
-                }
-
-            }
-        }
-
-        //  AS
-        /// <summary>
-        /// Event Handler for Color Frame
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void kinect_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
-        {
-            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
-            {
-                if (colorFrame != null)
-                {
-                    // Copy the pixel data from the image to a storage array
-                    colorFrame.CopyPixelDataTo(this.colorPixels);
+                    TestStable();
                 }
             }
-        }
-
-        //  AS
-        /// <summary>
-        /// Event Handler for Depth Frame
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-
-        public void kinect_DepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
-        {
-
-            using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
-            {
-                if (depthFrame != null)
-                {
-                    // Copy the pixel data from the image to a storage array
-                    depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
-                }
-            }
+                         
 
         }
 
-        */
-
-        private void CopySkeletonDataToClass()
-        {
-
-        }
 
 
         /// <summary>
@@ -438,12 +337,14 @@ namespace MultiKinectProcessor.SourceCode
                 {
                     if (skel.TrackingState == SkeletonTrackingState.Tracked)
                     {
+                        lock (CalibrateLock)
+                        {
+                            theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
+                            theta = Calculation.radians2Degrees(theta);
+                            distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
 
-                        theta = Calculation.findUserTheta(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z, skel.Joints[JointType.ShoulderRight].Position.X, skel.Joints[JointType.ShoulderRight].Position.Z);
-                        theta = Calculation.radians2Degrees(theta);
-                        distance = Calculation.findDistance(skel.Joints[JointType.ShoulderCenter].Position.X, skel.Joints[JointType.ShoulderCenter].Position.Z);
-
-                        Message.Info("Theta: " + theta);
+                           // Message.Info("Theta: " + theta);
+                        }
 
                         //TestStable();
 
@@ -466,27 +367,24 @@ namespace MultiKinectProcessor.SourceCode
         /// <returns></returns>
         private bool PositionStable()
         {
-            while (stableCheck == false)
-            {
-
-
-            }
+            calibrateBlock.WaitOne();
             return true;
 
 
         }
         private void TestStable()
         {
-            // Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
-            // Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
-            if (calibrationCheck == false)
-            {
-                return;
-            }
+            //Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
+            //Debug.WriteLine("stabilityDistanceCount: " + stabilityDistanceCount);
+            //Debug.WriteLine("Theta: " + theta);
+            //Debug.WriteLine("Distance: " + distance);
+           
             if (stabilityTheta == 0 && stabilityDistance == 0)//first
             {
                 stabilityDistance = distance;
                 stabilityTheta = theta;
+                //Debug.WriteLine("Theta: " + theta);
+                //Debug.WriteLine("Distance: " + distance);
             }
             else
             {
@@ -509,7 +407,8 @@ namespace MultiKinectProcessor.SourceCode
 
                 if (stabilityDistanceCount > STABILITY_LEVEL && stabilityThetaCount > STABILITY_LEVEL)
                 {
-                    stableCheck = true;
+                    
+                    calibrateBlock.Release();
                     distanceStatic = stabilityDistance;
                     thetaStatic = stabilityTheta;
                 }

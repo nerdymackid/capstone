@@ -39,7 +39,7 @@ namespace MultiKinectProcessor
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         static void Main()
         {
-            Debug.WriteLine("Entering Main Function");
+            Message.Info("Entering Main Function");
 
  
 
@@ -71,8 +71,8 @@ namespace MultiKinectProcessor
 
           //  KinectAll.kinectAll.CalibrateAll();
 
-           // Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
-            //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+           // Message.Info("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+            //Message.Info("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
   
             // SP - Now waiting for application to close
 

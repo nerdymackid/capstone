@@ -8,3 +8,5 @@ C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProc
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Release\MultiKinectProcessor.pdb
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Release\DebugWindow.baml
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Release\DebugWindow.g.cs
+C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Release\Microsoft.Kinect.Toolkit.dll
+C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\bin\Release\Microsoft.Kinect.Toolkit.FaceTracking.dll

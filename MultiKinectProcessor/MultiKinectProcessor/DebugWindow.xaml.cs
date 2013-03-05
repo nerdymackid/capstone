@@ -865,5 +865,10 @@ namespace MultiKinectProcessor
 
             }
         }
+
+        private void debugTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

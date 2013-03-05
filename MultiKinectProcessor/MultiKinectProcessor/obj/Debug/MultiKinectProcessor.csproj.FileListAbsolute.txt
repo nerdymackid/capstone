@@ -23,3 +23,4 @@ C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProc
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csproj.GenerateResource.Cache
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.exe
 C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.pdb
+C:\Users\Sea Pong\Documents\GitHub\capstone\MultiKinectProcessor\MultiKinectProcessor\obj\Debug\MultiKinectProcessor.csprojResolveAssemblyReference.cache

@@ -86,5 +86,11 @@
             </StatusBarItem>
         </StatusBar>
         <Button x:Name="BeginCalibration" Content="Begin Calibration" HorizontalAlignment="Left" Margin="734,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="130" Height="25" ToolTip="Click here to begin initial calibration seqeunce. This will detect and place all Kinects relative to user position and prepare for 3D Scene Visualization" Focusable="False" FontSize="14" FontWeight="Bold" BorderThickness="1" Click="BeginCalibration_Click"/>
+        <StatusBar x:Name="faceDetectionStatus" HorizontalAlignment="Left" Height="26" Margin="740,257,0,0" Grid.Row="2" VerticalAlignment="Top" Width="132">
+            <StatusBarItem Padding="0 0 0 10">
+                <TextBlock Name="faceDetectionStatusText" Margin="-1 0 0 0" Height="16" Width="132" TextAlignment="Center" RenderTransformOrigin="0.647,0.545" FontWeight="Bold">NOT STARTED</TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+        <Label Content="Face Detection" HorizontalAlignment="Left" Margin="740,239,0,0" Grid.Row="2" VerticalAlignment="Top" Width="132" Height="40"/>
     </Grid>
 </Window>

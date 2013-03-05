@@ -44,6 +44,9 @@ namespace MultiKinectProcessor
         /// </summary>
         private static DebugWindow debugWindowPrivateInstance = new DebugWindow();
 
+        private Thread calibrateThread = new Thread(new ThreadStart(KinectAll.kinectAll.CalibrateAll));
+        
+
         /// <summary>
         /// Sets a public static getter that gets the internal private instance
         /// </summary>
@@ -57,6 +60,7 @@ namespace MultiKinectProcessor
         /// </summary>
         private DebugWindow()
         {
+            calibrateThread.Name = "Calibration Thread";
             InitializeComponent();
         }
 
@@ -339,10 +343,14 @@ namespace MultiKinectProcessor
         /// <param name="e">event arguments</param>
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (null != KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
+            try
             {
-                KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.Stop();
+                if (null != KinectAll.kinectAll.getFirstKinectSingle().kinectSensor)
+                {
+                    KinectAll.kinectAll.getFirstKinectSingle().kinectSensor.Stop();
+                }
             }
+            catch { }
         }
 
         /// <summary>
@@ -456,6 +464,16 @@ namespace MultiKinectProcessor
                 // prevent drawing outside of our render area
                 this.drawingGroupTopView.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
 
+
+                // print face detection result
+                if (KinectAll.kinectAll.getFirstKinectSingle().FaceDetected())
+                {
+                    this.faceDetectionStatusText.Text = "DETECTED";
+                }
+                else
+                {
+                    this.faceDetectionStatusText.Text = "NOT DETECTED";
+                }
             }
         }
 
@@ -813,12 +831,29 @@ namespace MultiKinectProcessor
 
         private void BeginCalibration_Click(object sender, RoutedEventArgs e)
         {
-            Message.Info("Begin Caibration Button Clicked");
+            
+            if (calibrateThread.IsAlive == false)
+            {
 
-            //KinectAll.kinectAll.CalibrateAll();
+                Message.Info("Begin Caibration Button Clicked");
 
-            //Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
-            //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+                if (calibrateThread != null)
+                {
+                    calibrateThread = new Thread(new ThreadStart(KinectAll.kinectAll.CalibrateAll));
+                    calibrateThread.Name = "Calibration Thread";
+                }
+                calibrateThread.Start();
+                //KinectAll.kinectAll.CalibrateAll();
+
+                //Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+                //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+            }
+            else
+            {
+                MessageBox.Show("Calibration already in progress");
+                Message.Error("Calibration already in progress");
+
+            }
         }
     }
 }

@@ -76,7 +76,14 @@ namespace MultiKinectProcessor.SourceCode
         // SP/JP - Temporary function to just get one kinect pointer
         public KinectSingle getFirstKinectSingle()
         {
-            return kinectsList.First();
+            if (kinectsList.Count != 0)
+            {
+                return kinectsList.First();
+            }
+            else
+            {
+                return null;
+            }
         }
 
 
@@ -165,53 +172,7 @@ namespace MultiKinectProcessor.SourceCode
 
         }
 
-        /*
-         
-        /// <summary>
-        /// Start Skeleton Data Input Stream
-        /// </summary>
-        public void StartSkelStreamAll()
-        {
-                foreach (KinectSingle kinect in kinectsList)
-                {
-                    if (kinect.StartSkelStream() == false)
-                    {
-                        Message.Warning("Unable to Start Skeleton Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
-                    }
-                }
-        }
-
-        // AS
-        /// <summary>
-        /// Start Color Data Input Stream
-        /// </summary>
-        public void StartColorStreamAll()
-        {
-            foreach (KinectSingle kinect in kinectsList)
-            {
-                if (kinect.StartColorStream() == false)
-                {
-                    Message.Warning("Unable to Start Color Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
-                }
-            }
-        }
-
-        // AS
-        /// <summary>
-        /// Start Depth Data Input Stream
-        /// </summary>
-        public void StartDepthStreamAll()
-        {
-            foreach (KinectSingle kinect in kinectsList)
-            {
-                if (kinect.StartDepthStream() == false)
-                {
-                    Message.Warning("Unable to Start Depth Stream on Kinect with ID: " + kinect.kinectSensor.UniqueKinectId);
-                }
-            }
-        }
-
-        */
+       
 
 
         // AS
@@ -247,5 +208,20 @@ namespace MultiKinectProcessor.SourceCode
             }
 
         }
-    }
+        /// <summary>
+        /// Access function for kinectsList
+        /// </summary>
+        /// <param name="index"></param>
+        public KinectSingle AccessKinectList(int index)
+        {
+            return kinectsList[index];
+
+        }
+
+        public int GetKinectListLength()
+        {
+            return kinectsList.Count();
+        }
+
+    }   
 }

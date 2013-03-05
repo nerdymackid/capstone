@@ -155,8 +155,8 @@ namespace MultiKinectProcessor.SourceCode
             stabilityHeight = 0;
             calibrationCheck = false;
             calibrateBlock = new Semaphore(0, 1);
-            Debug.WriteLine("stabilityThetaCount_after initialization: " + stabilityThetaCount);
-            Debug.WriteLine("stabilityDistanceCount_after initialization: " + stabilityDistanceCount);
+            Message.Info("stabilityThetaCount_after initialization: " + stabilityThetaCount);
+            Message.Info("stabilityDistanceCount_after initialization: " + stabilityDistanceCount);
 
         }
         /// <summary>
@@ -252,7 +252,7 @@ namespace MultiKinectProcessor.SourceCode
 
                 // kinectSensor.SkeletonStream.Disable(); //done with the kinect skeleton stream disable it
 
-                Debug.WriteLine("Calibration success!");
+                Message.Info("Calibration success!");
                 calibrationCheck = false; //end of calibration sequence
                 return true;
             }
@@ -457,17 +457,17 @@ namespace MultiKinectProcessor.SourceCode
         }
         private void TestStable()
         {
-            //Debug.WriteLine("stabilityThetaCount: " + stabilityThetaCount);
-            //Debug.WriteLine("stabilityDistanceCount: " + stabilityDistanceCount);
-            //Debug.WriteLine("Theta: " + theta);
-            //Debug.WriteLine("Distance: " + distance);
+            //Message.Info("stabilityThetaCount: " + stabilityThetaCount);
+            //Message.Info("stabilityDistanceCount: " + stabilityDistanceCount);
+            //Message.Info("Theta: " + theta);
+            //Message.Info("Distance: " + distance);
            
             if (stabilityTheta == 0 && stabilityDistance == 0)//first
             {
                 stabilityDistance = distance;
                 stabilityTheta = theta;
-                //Debug.WriteLine("Theta: " + theta);
-                //Debug.WriteLine("Distance: " + distance);
+                //Message.Info("Theta: " + theta);
+                //Message.Info("Distance: " + distance);
             }
             else
             {

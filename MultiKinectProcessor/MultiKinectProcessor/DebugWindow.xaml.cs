@@ -855,8 +855,8 @@ namespace MultiKinectProcessor
                 calibrateThread.Start();
                 //KinectAll.kinectAll.CalibrateAll();
 
-                //Debug.WriteLine("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
-                //Debug.WriteLine("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
+                //Message.Info("static distance: " + KinectAll.kinectAll.kinectsList.First().GetStaticDistance());
+                //Message.Info("static theta: " + KinectAll.kinectAll.kinectsList.First().GetStaticAngle());
             }
             else
             {

@@ -101,7 +101,7 @@ namespace MultiKinectProcessor.SourceCode
 
             if (null == kinect)
             {
-                Debug.WriteLine("Kinect failed to start...");
+                Message.Info("Kinect failed to start...");
             }
             else
             {
